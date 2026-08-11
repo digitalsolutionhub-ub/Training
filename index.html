@@ -186,7 +186,7 @@
                         <label class="form-label">Kata Laluan</label>
                         <input type="password" id="login-password" class="form-input" placeholder="Masukkan Kata Laluan" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Log Masuk Portal Admin</button>
+                    <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width: 100%;">Log Masuk Portal Admin</button>
                 </form>
             </div>
 
@@ -472,22 +472,61 @@
         let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [];
         let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
 
-        /* --- ADMIN AUTHENTICATION --- */
-        function handleAdminLogin(e) {
+        /* --- SHA-256 HASHING FUNCTION --- */
+        async function hashText(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        /* --- ADMIN AUTHENTICATION (SERVER-SIDE GOOGLE SHEETS) --- */
+        async function handleAdminLogin(e) {
             e.preventDefault();
             const usernameInput = document.getElementById('login-username').value.trim();
             const passwordInput = document.getElementById('login-password').value.trim();
+            const submitBtn = document.getElementById('btn-login-submit');
 
-            if (usernameInput === 'admin' && passwordInput === 'unifi123') {
-                document.getElementById('admin-login-screen').style.display = 'none';
-                document.getElementById('admin-dashboard-panel').style.display = 'block';
-                showToast('Log masuk Admin berjaya!', 'success');
-            } else {
-                showToast('ID Pengguna atau Kata Laluan tidak sah!', 'danger');
+            if (!usernameInput || !passwordInput) {
+                showToast('Sila isi semua ruangan!', 'warning');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Mengesahkan...';
+            showToast('Mengesahkan kredensial dengan pelayan...', 'info');
+
+            try {
+                const passHash = await hashText(passwordInput);
+                const response = await sendToGoogleSheet({
+                    action: "adminLogin",
+                    username: usernameInput,
+                    passwordHash: passHash
+                });
+
+                if (response && response.success) {
+                    sessionStorage.setItem('unifi_crm_admin_auth', 'true');
+                    document.getElementById('admin-login-screen').style.display = 'none';
+                    document.getElementById('admin-dashboard-panel').style.display = 'block';
+                    showToast('Log masuk Admin berjaya!', 'success');
+                    renderAdminBookings();
+                    renderAdminTrainings();
+                    renderAdminUsers();
+                } else {
+                    showToast(response?.message || 'ID Pengguna atau Kata Laluan tidak sah!', 'danger');
+                }
+            } catch (err) {
+                console.error("Ralat log masuk admin:", err);
+                showToast('Ralat sambungan ke pelayan Google Sheets!', 'danger');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Log Masuk Portal Admin';
             }
         }
 
         function handleAdminLogout() {
+            sessionStorage.removeItem('unifi_crm_admin_auth');
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
             document.getElementById('admin-login-screen').style.display = 'block';
@@ -495,79 +534,24 @@
             showToast('Anda telah log keluar daripada portal Admin.', 'warning');
         }
 
-        /* --- FUNGSI PENGURUSAN MODUL LATIHAN (TAMBAH & PADAM) --- */
-        function openAddTrainingModal() {
-            document.getElementById('add-training-form').reset();
-            openModal('add-training-modal');
-        }
-
-        function submitAddTraining(e) {
-            e.preventDefault();
-            const title = document.getElementById('add-tr-title').value.trim();
-            const category = document.getElementById('add-tr-category').value;
-            const date = document.getElementById('add-tr-date').value;
-            const slots = parseInt(document.getElementById('add-tr-slots').value, 10);
-            const time = document.getElementById('add-tr-time').value.trim();
-            const desc = document.getElementById('add-tr-desc').value.trim();
-
-            const newTraining = {
-                id: 'TRN-' + Math.floor(100 + Math.random() * 900),
-                title: title,
-                category: category,
-                date: date,
-                time: time,
-                totalSlots: slots,
-                bookedSlots: 0,
-                description: desc
-            };
-
-            trainings.unshift(newTraining);
-            saveData();
-
-            renderUserTrainings();
-            renderAdminTrainings();
-
-            sendToGoogleSheet({ action: "addTraining", training: newTraining });
-
-            addNotification('Modul Latihan Baharu', `Modul "${title}" telah berjaya ditambah.`);
-            closeModal('add-training-modal');
-            showToast('Modul latihan baharu berjaya ditambah!', 'success');
-        }
-
-        function deleteTraining(id) {
-            const tr = trainings.find(t => t.id === id);
-            if (!tr) return;
-
-            if (confirm(`Adakah anda pasti untuk menghapus modul "${tr.title}"?`)) {
-                trainings = trainings.filter(t => t.id !== id);
-                saveData();
-
-                renderUserTrainings();
-                renderAdminTrainings();
-
-                sendToGoogleSheet({ action: "deleteTraining", trainingId: id });
-
-                addNotification('Modul Latihan Dihapus', `Modul "${tr.title}" telah dipadamkan.`);
-                showToast('Modul latihan telah dihapuskan.', 'warning');
-            }
-        }
-
         /* --- FUNGSI UTAMA SYNC GOOGLE SHEETS --- */
         async function sendToGoogleSheet(payload) {
             if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("MASUKKAN_URL")) {
                 console.warn("URL Google Apps Script belum dimasukkan.");
-                return;
+                return { success: false, message: "URL Google Apps Script tidak ditetapkan." };
             }
             try {
-                await fetch(GOOGLE_SCRIPT_URL, {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
-                    mode: "no-cors",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify(payload)
                 });
-                console.log("Isyarat sync dihantar ke Google Sheet:", payload.action);
+                const result = await response.json();
+                console.log("Respon daripada Google Sheet:", result);
+                return result;
             } catch (err) {
                 console.error("Gagal sync ke Google Sheet:", err);
+                return { success: false, message: err.toString() };
             }
         }
 
@@ -610,6 +594,63 @@
             } catch (err) {
                 console.error("Gagal fetch dari Google Sheet:", err);
                 showToast("Gagal menyambung ke Google Sheet.", "danger");
+            }
+        }
+
+        /* --- FUNGSI PENGURUSAN MODUL LATIHAN (TAMBAH & PADAM) --- */
+        function openAddTrainingModal() {
+            document.getElementById('add-training-form').reset();
+            openModal('add-training-modal');
+        }
+
+        function submitAddTraining(e) {
+            e.preventDefault();
+            const title = document.getElementById('add-tr-title').value.trim();
+            const category = document.getElementById('add-tr-category').value;
+            const date = document.getElementById('add-tr-date').value;
+            const slots = parseInt(document.getElementById('add-tr-slots').value, 10);
+            const time = document.getElementById('add-tr-time').value.trim();
+            const desc = document.getElementById('add-tr-desc').value.trim();
+
+            const newTraining = {
+                id: 'TRN-' + Math.floor(100 + Math.random() * 900),
+                title: title,
+                category: category,
+                date: date,
+                time: time,
+                totalSlots: slots,
+                bookedSlots: 0,
+                description: desc
+            };
+
+            trainings.unshift(newTraining);
+            saveData();
+
+            renderUserTrainings();
+            renderAdminTrainings();
+
+            sendToGoogleSheet({ action: "syncPortalData", subAction: "addTraining", training: newTraining });
+
+            addNotification('Modul Latihan Baharu', `Modul "${title}" telah berjaya ditambah.`);
+            closeModal('add-training-modal');
+            showToast('Modul latihan baharu berjaya ditambah!', 'success');
+        }
+
+        function deleteTraining(id) {
+            const tr = trainings.find(t => t.id === id);
+            if (!tr) return;
+
+            if (confirm(`Adakah anda pasti untuk menghapus modul "${tr.title}"?`)) {
+                trainings = trainings.filter(t => t.id !== id);
+                saveData();
+
+                renderUserTrainings();
+                renderAdminTrainings();
+
+                sendToGoogleSheet({ action: "syncPortalData", subAction: "deleteTraining", trainingId: id });
+
+                addNotification('Modul Latihan Dihapus', `Modul "${tr.title}" telah dipadamkan.`);
+                showToast('Modul latihan telah dihapuskan.', 'warning');
             }
         }
 
@@ -712,7 +753,7 @@
             currentUser = newUser;
             saveData();
 
-            sendToGoogleSheet({ action: "addUser", user: newUser });
+            sendToGoogleSheet({ action: "syncPortalData", subAction: "addUser", user: newUser });
             addNotification('Akaun Baharu Berjaya Didaftarkan', `Selamat datang ${name} (${company}) ke Unifi Business CRM.`);
 
             showToast('Pendaftaran berjaya!', 'success');
@@ -730,7 +771,7 @@
                 }
                 saveData();
                 renderAdminUsers();
-                sendToGoogleSheet({ action: "deleteUser", email: email });
+                sendToGoogleSheet({ action: "syncPortalData", subAction: "deleteUser", email: email });
                 showToast('Akaun pengguna telah dipadam.', 'warning');
             }
         }
@@ -765,7 +806,7 @@
             bookings.push(newBooking);
             saveData();
 
-            sendToGoogleSheet({ action: "addBooking", booking: newBooking });
+            sendToGoogleSheet({ action: "syncPortalData", subAction: "addBooking", booking: newBooking });
             addNotification('Tempahan Baharu Dihantar', `Tempahan ${newBooking.id} bagi modul "${tr.title}" telah diterima.`);
 
             renderUserTrainings();
@@ -787,7 +828,8 @@
             renderAdminBookings();
 
             sendToGoogleSheet({
-                action: "updateBookingStatus",
+                action: "syncPortalData",
+                subAction: "updateBookingStatus",
                 bookingId: bookingId,
                 status: status,
                 adminNote: bk.adminNote
@@ -892,6 +934,12 @@
             document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
             document.getElementById('user-view').classList.toggle('active', role === 'user');
             document.getElementById('admin-view').classList.toggle('active', role === 'admin');
+
+            if (role === 'admin') {
+                const isAuthenticated = sessionStorage.getItem('unifi_crm_admin_auth') === 'true';
+                document.getElementById('admin-login-screen').style.display = isAuthenticated ? 'none' : 'block';
+                document.getElementById('admin-dashboard-panel').style.display = isAuthenticated ? 'block' : 'none';
+            }
         }
 
         function switchAdminTab(tab) {
