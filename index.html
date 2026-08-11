@@ -472,28 +472,13 @@
         let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [];
         let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
 
-        /* --- HELPER: HASH STRING (SHA-256) --- */
-        async function hashText(text) {
-            const msgUint8 = new TextEncoder().encode(text);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        /* --- ADMIN AUTHENTICATION (SECURED VIA SHA-256 HASH) --- */
-        async function handleAdminLogin(e) {
+        /* --- ADMIN AUTHENTICATION --- */
+        function handleAdminLogin(e) {
             e.preventDefault();
             const usernameInput = document.getElementById('login-username').value.trim();
             const passwordInput = document.getElementById('login-password').value.trim();
 
-            // SHA-256 hashes for 'admin' and 'unifi123'
-            const targetUserHash = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
-            const targetPassHash = "25ad1f6213768b577317ebac3bcfe63e0fa4caee6a74b218a5f36e8aa7f6071e";
-
-            const userHash = await hashText(usernameInput);
-            const passHash = await hashText(passwordInput);
-
-            if (userHash === targetUserHash && passHash === targetPassHash) {
+            if (usernameInput === 'admin' && passwordInput === 'unifi123') {
                 document.getElementById('admin-login-screen').style.display = 'none';
                 document.getElementById('admin-dashboard-panel').style.display = 'block';
                 showToast('Log masuk Admin berjaya!', 'success');
