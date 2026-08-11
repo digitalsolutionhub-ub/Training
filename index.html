@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unifi Business | Training Booking CRM System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF5800; /* Unifi Business Orange */
+            --primary-hover: #E04D00;
+            --primary-light: #FFF0E6;
+            --secondary: #0A192F; /* Unifi Dark Slate */
+            --secondary-light: #1E293B;
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            
+            --status-approved-bg: #DCFCE7;
+            --status-approved: #15803D;
+            --status-pending-bg: #FEF9C3;
+            --status-pending: #A16207;
+            --status-cancelled-bg: #FEE2E2;
+            --status-cancelled: #B91C1C;
+            --status-postponed-bg: #E0F2FE;
+            --status-postponed: #0369A1;
+
+            --radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.01);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Header */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            background: var(--primary);
+            color: white;
+            padding: 0.4rem 0.84rem;
+            border-radius: 8px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .role-switcher {
+            display: flex;
+            background: var(--bg);
+            padding: 0.35rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .role-btn {
+            border: none;
+            background: transparent;
+            padding: 0.55rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .role-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 88, 0, 0.25);
+        }
+
+        .notif-bell {
+            position: relative;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .notif-bell:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #EF4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--surface);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2.5rem 2rem;
+            flex: 1;
+        }
+
+        .view-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--secondary);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.975rem;
+        }
+
+        /* Cards Layout */
+        .training-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 88, 0, 0.4);
+            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-tag {
+            align-self: flex-start;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--bg); color: var(--secondary); border: 1px solid var(--border); }
+        .btn-success { background: var(--status-approved-bg); color: var(--status-approved); }
+        .btn-warning { background: var(--status-postponed-bg); color: var(--status-postponed); }
+        .btn-danger { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
+        .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 8px; }
+
+        /* Tables & Modals */
+        .table-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th { background: #F1F5F9; color: var(--secondary); padding: 1rem 1.25rem; font-weight: 700; }
+        td { padding: 1.1rem 1.25rem; border-bottom: 1px solid var(--border); }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-Pending { background: var(--status-pending-bg); color: var(--status-pending); }
+        .status-Approved { background: var(--status-approved-bg); color: var(--status-approved); }
+        .status-Cancelled { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
+        .status-Postponed { background: var(--status-postponed-bg); color: var(--status-postponed); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 200; opacity: 0; pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            width: 100%; max-width: 520px;
+            padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-height: 90vh; overflow-y: auto;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.35rem; font-weight: 700; color: var(--secondary); }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary); }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border); font-size: 0.9rem;
+        }
+
+        .toast-container {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 300;
+            display: flex; flex-direction: column; gap: 0.75rem; max-width: 380px; width: 100%;
+        }
+
+        .toast {
+            background: var(--secondary); color: white; padding: 1rem 1.25rem;
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex; align-items: flex-start; gap: 0.75rem; border-left: 5px solid var(--primary);
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notif-item { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.35rem; }
+        .notif-item.unread { background: var(--primary-light); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="#" class="brand">
+            <span class="brand-logo">unifi</span>
+            <span>Business CRM</span>
+        </a>
+        <div class="header-actions">
+            <div class="role-switcher">
+                <button class="role-btn active" id="btn-role-user" onclick="switchRole('user')">Pandangan Pelanggan</button>
+                <button class="role-btn" id="btn-role-admin" onclick="switchRole('admin')">Mod Admin CRM</button>
+            </div>
+            <div class="notif-bell" onclick="openNotifModal()" title="Pusat Notifikasi">
+                🔔
+                <span class="notif-badge" id="notif-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- USER VIEW -->
+        <main id="user-view" class="view-panel active">
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Program Latihan Digital Unifi Business</h1>
+                    <p class="section-desc">Pilih sesi latihan perniagaan dan bina keupayaan digital syarikat anda hari ini.</p>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="openMyBookingsModal()">📋 Semak Status Tempahan Saya</button>
+                </div>
+            </div>
+            <div id="user-training-grid" class="training-grid"></div>
+        </main>
+
+        <!-- ADMIN VIEW -->
+        <main id="admin-view" class="view-panel">
+            <!-- Login Screen -->
+            <div id="admin-login-screen" style="max-width: 420px; margin: 3rem auto; background: var(--surface); padding: 2.5rem; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="brand-logo" style="display: inline-block; font-size: 1.5rem; padding: 0.5rem 1rem; margin-bottom: 1rem;">unifi</div>
+                    <h2 style="font-size: 1.4rem; color: var(--secondary);">Log Masuk Admin CRM</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Akses panel kawalan tempahan & latihan.</p>
+                </div>
+                <form onsubmit="handleAdminLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">ID Pengguna</label>
+                        <input type="text" id="login-username" class="form-input" value="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kata Laluan</label>
+                        <input type="password" id="login-password" class="form-input" value="unifi123" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Log Masuk Portal Admin</button>
+                </form>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin-dashboard-panel" style="display: none;">
+                <div style="background: var(--secondary); color: white; padding: 1.5rem 2rem; border-radius: var(--radius); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="font-size: 1.35rem;">Selamat Datang, Admin Unifi</h2>
+                        <p style="font-size: 0.875rem; opacity: 0.8;">Uruskan kelulusan, kemaskini masa latihan, dan hantar notifikasi automatik.</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" style="background: rgba(255,255,255,0.15); color: white; border: none;">Log Keluar</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Peserta</th>
+                                <th>Syarikat / Emel</th>
+                                <th>Modul Latihan</th>
+                                <th>Tarikh Tempahan</th>
+                                <th>Status</th>
+                                <th>Tindakan & Notifikasi Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-booking-rows"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals & Toast Containers -->
+    <div id="action-note-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="action-note-title">Sebab Tindakan Admin</h2>
+                <button class="close-btn" onclick="closeModal('action-note-modal')">&times;</button>
+            </div>
+            <form onsubmit="submitAdminActionWithNote(event)">
+                <input type="hidden" id="action-booking-id">
+                <input type="hidden" id="action-target-status">
+                <div class="form-group">
+                    <label class="form-label">Mesej / Nota Kepada Peserta</label>
+                    <textarea id="action-note-text" class="form-textarea" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Hantar Notifikasi & Kemaskini</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notif-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">🔔 Pusat Notifikasi Status</h2>
+                <button class="close-btn" onclick="closeModal('notif-modal')">&times;</button>
+            </div>
+            <div id="notif-list-container"></div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        /* JavaScript Engine dimasukkan di sini */
+    </script>
+</body>
+</html>
