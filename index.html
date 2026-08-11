@@ -144,8 +144,8 @@
                 <button class="btn btn-secondary btn-sm" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
             </div>
             <div class="role-switcher">
-                <button class="role-btn active" id="btn-role-user" onclick="switchRole('user')">Pandangan Pelanggan</button>
-                <button class="role-btn" id="btn-role-admin" onclick="switchRole('admin')">Mod Admin CRM</button>
+                <button class="role-btn active" id="btn-role-user" onclick="switchRole('user')">Portal Pelanggan</button>
+                <button class="role-btn" id="btn-role-admin" onclick="switchRole('admin')">Portal Admin</button>
             </div>
             <div class="notif-bell" onclick="openNotifModal()" title="Pusat Notifikasi">
                 🔔
@@ -180,11 +180,11 @@
                 <form onsubmit="handleAdminLogin(event)">
                     <div class="form-group">
                         <label class="form-label">ID Pengguna / Emel</label>
-                        <input type="text" id="login-username" class="form-input" value="admin" required>
+                        <input type="text" id="login-username" class="form-input" placeholder="Masukkan ID Pengguna" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Kata Laluan</label>
-                        <input type="password" id="login-password" class="form-input" value="unifi123" required>
+                        <input type="password" id="login-password" class="form-input" placeholder="Masukkan Kata Laluan" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Log Masuk Portal Admin</button>
                 </form>
@@ -460,7 +460,7 @@
     <div id="toast-container" class="toast-container"></div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYHVD329QPhLnTc1aZ1wdy1s_EN2w8HBJe_uTB0iGj5UP6xmJM6KAikFM3ifvs0eko/exec";
+        const GOOGLE_SCRIPT_URL = "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI";
 
         let trainings = JSON.parse(localStorage.getItem('unifi_crm_trainings')) || [
             { id: 'TRN-101', title: 'Pemasaran Digital & Social Commerce Mastery', category: 'Pemasaran Digital', date: '2026-09-15', time: '09:30 AM - 12:30 PM', totalSlots: 30, bookedSlots: 12, description: 'Kuasai strategi pengiklanan TikTok, Facebook Ads dan SEO.' },
@@ -471,6 +471,44 @@
         let registeredUsers = JSON.parse(localStorage.getItem('unifi_crm_users')) || [];
         let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [];
         let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
+
+        /* --- HELPER: HASH STRING (SHA-256) --- */
+        async function hashText(text) {
+            const msgUint8 = new TextEncoder().encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        /* --- ADMIN AUTHENTICATION (SECURED VIA SHA-256 HASH) --- */
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
+
+            // SHA-256 hashes for 'admin' and 'unifi123'
+            const targetUserHash = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+            const targetPassHash = "25ad1f6213768b577317ebac3bcfe63e0fa4caee6a74b218a5f36e8aa7f6071e";
+
+            const userHash = await hashText(usernameInput);
+            const passHash = await hashText(passwordInput);
+
+            if (userHash === targetUserHash && passHash === targetPassHash) {
+                document.getElementById('admin-login-screen').style.display = 'none';
+                document.getElementById('admin-dashboard-panel').style.display = 'block';
+                showToast('Log masuk Admin berjaya!', 'success');
+            } else {
+                showToast('ID Pengguna atau Kata Laluan tidak sah!', 'danger');
+            }
+        }
+
+        function handleAdminLogout() {
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('admin-login-screen').style.display = 'block';
+            document.getElementById('admin-dashboard-panel').style.display = 'none';
+            showToast('Anda telah log keluar daripada portal Admin.', 'warning');
+        }
 
         /* --- FUNGSI PENGURUSAN MODUL LATIHAN (TAMBAH & PADAM) --- */
         function openAddTrainingModal() {
@@ -930,19 +968,6 @@
             document.getElementById('book-email').value = currentUser.email;
             document.getElementById('book-company').value = currentUser.company;
             openModal('booking-modal');
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            if (document.getElementById('login-username').value === 'admin') {
-                document.getElementById('admin-login-screen').style.display = 'none';
-                document.getElementById('admin-dashboard-panel').style.display = 'block';
-            }
-        }
-
-        function handleAdminLogout() {
-            document.getElementById('admin-login-screen').style.display = 'block';
-            document.getElementById('admin-dashboard-panel').style.display = 'none';
         }
 
         function openActionNoteModal(id, status) {
