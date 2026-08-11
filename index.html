@@ -473,20 +473,49 @@
         let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
 
         /* --- ADMIN AUTHENTICATION --- */
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const usernameInput = document.getElementById('login-username').value.trim();
-            const passwordInput = document.getElementById('login-password').value.trim();
+        async function handleAdminLogin(e) {
+    e.preventDefault();
+    
+    const usernameInput = document.getElementById('login-username').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
 
-            if (usernameInput === 'admin' && passwordInput === 'unifi123') {
-                document.getElementById('admin-login-screen').style.display = 'none';
-                document.getElementById('admin-dashboard-panel').style.display = 'block';
-                showToast('Log masuk Admin berjaya!', 'success');
-            } else {
-                showToast('ID Pengguna atau Kata Laluan tidak sah!', 'danger');
-            }
+    if (!usernameInput || !passwordInput) {
+        showToast('Sila isi semua ruangan!', 'warning');
+        return;
+    }
+
+    // Hash the entered password on client before sending
+    const passHash = await hashText(passwordInput);
+
+    showToast('Mengesahkan kredensial...', 'info');
+
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'adminLogin',
+                username: usernameInput,
+                passwordHash: passHash
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            sessionStorage.setItem('unifi_crm_admin_auth', 'true');
+            document.getElementById('admin-login-screen').style.display = 'none';
+            document.getElementById('admin-dashboard-panel').style.display = 'block';
+            showToast('Log masuk Admin berjaya!', 'success');
+            renderAdminTables();
+        } else {
+            showToast(result.message || 'ID Pengguna atau Kata Laluan salah!', 'danger');
         }
-
+    } catch (err) {
+        console.error("Auth error:", err);
+        showToast('Ralat sambungan ke pelayan Google Sheets!', 'danger');
+    }
+}
         function handleAdminLogout() {
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
