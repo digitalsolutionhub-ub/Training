@@ -7,10 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF5800; /* Unifi Business Orange */
+            --primary: #FF5800;
             --primary-hover: #E04D00;
             --primary-light: #FFF0E6;
-            --secondary: #0A192F; /* Unifi Dark Slate */
+            --secondary: #0A192F;
             --secondary-light: #1E293B;
             --bg: #F8FAFC;
             --surface: #FFFFFF;
@@ -32,624 +32,121 @@
             --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; font-size: 1.25rem; color: var(--secondary); text-decoration: none; }
+        .brand-logo { background: var(--primary); color: white; padding: 0.4rem 0.84rem; border-radius: 8px; font-weight: 800; letter-spacing: -0.5px; }
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
 
-        /* --- Header / Navigation --- */
-        header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .role-switcher { display: flex; background: var(--bg); padding: 0.35rem; border-radius: 30px; border: 1px solid var(--border); }
+        .role-btn { border: none; background: transparent; padding: 0.55rem 1.2rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: var(--transition); }
+        .role-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(255, 88, 0, 0.25); }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--secondary);
-            text-decoration: none;
-        }
+        .user-auth-badge { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; }
+        .notif-bell { position: relative; background: var(--bg); border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
+        .notif-bell:hover { background: var(--primary-light); border-color: var(--primary); }
+        .notif-badge { position: absolute; top: -2px; right: -2px; background: #EF4444; color: white; font-size: 0.7rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
 
-        .brand-logo {
-            background: var(--primary);
-            color: white;
-            padding: 0.4rem 0.84rem;
-            border-radius: 8px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; width: 100%; padding: 2.5rem 2rem; flex: 1; }
+        .view-panel { display: none; animation: fadeIn 0.3s ease; }
+        .view-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .section-header { margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+        .section-title { font-size: 1.85rem; font-weight: 700; color: var(--secondary); letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+        .section-desc { color: var(--text-muted); font-size: 0.975rem; }
 
-        .role-switcher {
-            display: flex;
-            background: var(--bg);
-            padding: 0.35rem;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-        }
+        .training-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; transition: var(--transition); position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-4px); border-color: rgba(255, 88, 0, 0.4); box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08); }
+        .card-tag { align-self: flex-start; background: var(--primary-light); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+        .card-title { font-size: 1.25rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.75rem; line-height: 1.35; }
+        .card-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+        .card-meta { display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--text-main); }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .slot-badge { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .slot-count { color: var(--primary); font-weight: 700; }
 
-        .role-btn {
-            border: none;
-            background: transparent;
-            padding: 0.55rem 1.2rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .role-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 88, 0, 0.25);
-        }
-
-        .user-auth-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
-        .notif-bell {
-            position: relative;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1.2rem;
-        }
-
-        .notif-bell:hover {
-            background: var(--primary-light);
-            border-color: var(--primary);
-        }
-
-        .notif-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #EF4444;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 800;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--surface);
-        }
-
-        /* --- Layout Container --- */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 2.5rem 2rem;
-            flex: 1;
-        }
-
-        .view-panel {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .view-panel.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Section Titles & White Space --- */
-        .section-header {
-            margin-bottom: 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .section-title {
-            font-size: 1.85rem;
-            font-weight: 700;
-            color: var(--secondary);
-            letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-        }
-
-        .section-desc {
-            color: var(--text-muted);
-            font-size: 0.975rem;
-        }
-
-        /* --- User View: Training Cards Grid --- */
-        .training-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 88, 0, 0.4);
-            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--primary);
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-tag {
-            align-self: flex-start;
-            background: var(--primary-light);
-            color: var(--primary);
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 0.75rem;
-            line-height: 1.35;
-        }
-
-        .card-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 1rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-            color: var(--text-main);
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .slot-badge {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .slot-count {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* --- Buttons & Controls --- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            box-shadow: 0 6px 16px rgba(255, 88, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--bg);
-            color: var(--secondary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: #E2E8F0;
-        }
-
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: var(--transition); gap: 0.5rem; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); box-shadow: 0 6px 16px rgba(255, 88, 0, 0.3); }
+        .btn-secondary { background: var(--bg); color: var(--secondary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #E2E8F0; }
         .btn-success { background: var(--status-approved-bg); color: var(--status-approved); }
         .btn-success:hover { background: #BBF7D0; }
-
         .btn-warning { background: var(--status-postponed-bg); color: var(--status-postponed); }
         .btn-warning:hover { background: #BAE6FD; }
-
         .btn-danger { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
         .btn-danger:hover { background: #FCA5A5; }
+        .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 8px; }
 
-        .btn-sm {
-            padding: 0.4rem 0.85rem;
-            font-size: 0.8rem;
-            border-radius: 8px;
-        }
+        .auth-nav-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+        .auth-tab-btn { flex: 1; padding: 0.75rem; background: transparent; border: none; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: var(--transition); }
+        .auth-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* --- Auth Tabs inside Auth Modal --- */
-        .auth-nav-tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 1.5rem;
-        }
+        .admin-header-bar { background: var(--secondary); color: white; padding: 1.5rem 2rem; border-radius: var(--radius); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+        .admin-nav { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+        .admin-tab { padding: 0.75rem 0.25rem; border: none; background: transparent; font-weight: 600; font-size: 1rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: var(--transition); }
+        .admin-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 
-        .auth-tab-btn {
-            flex: 1;
-            padding: 0.75rem;
-            background: transparent;
-            border: none;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: var(--transition);
-        }
-
-        .auth-tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        /* --- Admin View & Tabs --- */
-        .admin-header-bar {
-            background: var(--secondary);
-            color: white;
-            padding: 1.5rem 2rem;
-            border-radius: var(--radius);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-        }
-
-        .admin-nav {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-        }
-
-        .admin-tab {
-            padding: 0.75rem 0.25rem;
-            border: none;
-            background: transparent;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: var(--transition);
-        }
-
-        .admin-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        /* --- Tables --- */
-        .table-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        th {
-            background: #F1F5F9;
-            color: var(--secondary);
-            padding: 1rem 1.25rem;
-            font-weight: 700;
-            border-bottom: 1px solid var(--border);
-        }
-
-        td {
-            padding: 1.1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-main);
-            vertical-align: middle;
-        }
-
+        .table-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th { background: #F1F5F9; color: var(--secondary); padding: 1rem 1.25rem; font-weight: 700; border-bottom: 1px solid var(--border); }
+        td { padding: 1.1rem 1.25rem; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #FAFBFD; }
 
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
         .status-Pending { background: var(--status-pending-bg); color: var(--status-pending); }
         .status-Approved { background: var(--status-approved-bg); color: var(--status-approved); }
         .status-Cancelled { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
         .status-Postponed { background: var(--status-postponed-bg); color: var(--status-postponed); }
 
-        /* --- Modals & Popups --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal {
-            background: var(--surface);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 520px;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: translateY(20px);
-            transition: var(--transition);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--secondary);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal { background: var(--surface); border-radius: var(--radius); width: 100%; max-width: 520px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: translateY(20px); transition: var(--transition); max-height: 90vh; overflow-y: auto; }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.35rem; font-weight: 700; color: var(--secondary); }
+        .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); transition: var(--transition); }
         .close-btn:hover { color: var(--text-main); }
 
         .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary); }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border); font-size: 0.9rem; outline: none; transition: var(--transition); }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 88, 0, 0.15); }
 
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--secondary);
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            font-size: 0.9rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 88, 0, 0.15);
-        }
-
-        /* --- Toast Notification Banner --- */
-        .toast-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-width: 380px;
-            width: 100%;
-        }
-
-        .toast {
-            background: var(--secondary);
-            color: white;
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            border-left: 5px solid var(--primary);
-            animation: slideInRight 0.3s ease, fadeOut 0.5s ease 4.5s forwards;
-        }
-
+        .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 300; display: flex; flex-direction: column; gap: 0.75rem; max-width: 380px; width: 100%; }
+        .toast { background: var(--secondary); color: white; padding: 1rem 1.25rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; align-items: flex-start; gap: 0.75rem; border-left: 5px solid var(--primary); animation: slideInRight 0.3s ease, fadeOut 0.5s ease 4.5s forwards; }
         .toast.success { border-left-color: #22C55E; }
         .toast.warning { border-left-color: #F59E0B; }
         .toast.danger { border-left-color: #EF4444; }
 
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
 
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; pointer-events: none; }
-        }
-
-        .notif-item {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-            transition: var(--transition);
-        }
-
-        .notif-item:last-child { border-bottom: none; }
-
-        .notif-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notif-title { font-weight: 700; font-size: 0.9rem; color: var(--secondary); }
-        .notif-time { font-size: 0.75rem; color: var(--text-muted); }
-        .notif-body { font-size: 0.85rem; color: var(--text-main); line-height: 1.4; }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .header-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
-            .container { padding: 1.5rem 1rem; }
-            .action-bar { flex-direction: column; gap: 1rem; align-items: stretch; }
-            .table-container { overflow-x: auto; }
-            .admin-header-bar { flex-direction: column; gap: 1rem; text-align: center; }
-            .admin-nav { overflow-x: auto; white-space: nowrap; }
-        }
+        .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 12px; background: #E0F2FE; color: #0369A1; display: inline-flex; align-items: center; gap: 0.3rem; }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navigation -->
     <header>
         <a href="#" class="brand">
             <span class="brand-logo">unifi</span>
             <span>Business CRM</span>
         </a>
         <div class="header-actions">
-            <!-- User Login / Account Section -->
+            <span id="sync-indicator" class="sync-badge">🔄 LocalStorage</span>
             <div id="user-auth-section" class="user-auth-badge">
-                <button class="btn btn-secondary btn-sm" id="btn-open-user-auth" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
+                <button class="btn btn-secondary btn-sm" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
             </div>
-
             <div class="role-switcher">
                 <button class="role-btn active" id="btn-role-user" onclick="switchRole('user')">Pandangan Pelanggan</button>
                 <button class="role-btn" id="btn-role-admin" onclick="switchRole('admin')">Mod Admin CRM</button>
             </div>
-            
-            <!-- Notification Bell for Users/Admin -->
             <div class="notif-bell" onclick="openNotifModal()" title="Pusat Notifikasi">
                 🔔
                 <span class="notif-badge" id="notif-count">0</span>
@@ -658,8 +155,7 @@
     </header>
 
     <div class="container">
-        
-        <!-- USER VIEW: Browse & Book Training -->
+        <!-- USER VIEW -->
         <main id="user-view" class="view-panel active">
             <div class="section-header">
                 <div>
@@ -670,16 +166,11 @@
                     <button class="btn btn-secondary" onclick="openMyBookingsModal()">📋 Semak Status Tempahan Saya</button>
                 </div>
             </div>
-            
-            <div id="user-training-grid" class="training-grid">
-                <!-- Training Cards dynamically inserted via JS -->
-            </div>
+            <div id="user-training-grid" class="training-grid"></div>
         </main>
 
-        <!-- ADMIN VIEW: Login Screen or Admin Panel -->
+        <!-- ADMIN VIEW -->
         <main id="admin-view" class="view-panel">
-            
-            <!-- ADMIN LOGIN CONTAINER -->
             <div id="admin-login-screen" style="max-width: 420px; margin: 3rem auto; background: var(--surface); padding: 2.5rem; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow);">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div class="brand-logo" style="display: inline-block; font-size: 1.5rem; padding: 0.5rem 1rem; margin-bottom: 1rem;">unifi</div>
@@ -689,36 +180,35 @@
                 <form onsubmit="handleAdminLogin(event)">
                     <div class="form-group">
                         <label class="form-label">ID Pengguna / Emel</label>
-                        <input type="text" id="login-username" class="form-input" placeholder="admin" value="admin" required>
+                        <input type="text" id="login-username" class="form-input" value="admin" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Kata Laluan</label>
-                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="unifi123" required>
+                        <input type="password" id="login-password" class="form-input" value="unifi123" required>
                     </div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.25rem;">*Guna ID Default: <strong>admin</strong> | Kata Laluan: <strong>unifi123</strong></p>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Log Masuk Portal Admin</button>
                 </form>
             </div>
 
-            <!-- ADMIN DASHBOARD PANEL (Hidden until logged in) -->
             <div id="admin-dashboard-panel" style="display: none;">
-                
                 <div class="admin-header-bar">
                     <div>
                         <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.25rem;">Selamat Datang, Admin Unifi</h2>
-                        <p style="opacity: 0.8; font-size: 0.875rem;">Uruskan kelulusan, kemaskini masa latihan, dan pengurusan pengguna.</p>
+                        <p style="opacity: 0.8; font-size: 0.875rem;">Semua data diselaraskan secara langsung dengan Google Sheets.</p>
                     </div>
-                    <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" style="background: rgba(255,255,255,0.15); color: white; border: none;">Log Keluar</button>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="fetchFromGoogleSheet()" style="background: rgba(255,255,255,0.2); color: white; border: none;">🔄 Sync Google Sheet</button>
+                        <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" style="background: rgba(255,255,255,0.15); color: white; border: none;">Log Keluar</button>
+                    </div>
                 </div>
 
-                <!-- Admin Navigation Tabs -->
                 <div class="admin-nav">
                     <button class="admin-tab active" onclick="switchAdminTab('bookings')">Pengurusan Tempahan (<span id="count-bookings">0</span>)</button>
                     <button class="admin-tab" onclick="switchAdminTab('trainings')">Pengurusan Modul Latihan (<span id="count-trainings">0</span>)</button>
                     <button class="admin-tab" onclick="switchAdminTab('users')">Pengurusan Pengguna (<span id="count-users">0</span>)</button>
                 </div>
 
-                <!-- Tab 1: Bookings Management -->
+                <!-- Tab 1: Bookings -->
                 <section id="admin-tab-bookings" class="admin-tab-content">
                     <div class="table-container">
                         <table>
@@ -732,14 +222,12 @@
                                     <th>Tindakan & Notifikasi Admin</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-booking-rows">
-                                <!-- Booking rows inserted via JS -->
-                            </tbody>
+                            <tbody id="admin-booking-rows"></tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- Tab 2: Training Management -->
+                <!-- Tab 2: Trainings -->
                 <section id="admin-tab-trainings" class="admin-tab-content" style="display: none;">
                     <div class="action-bar">
                         <p class="section-desc">Senarai modul latihan aktif dalam portal Unifi Business.</p>
@@ -756,17 +244,15 @@
                                     <th>Tindakan Modul</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-training-rows">
-                                <!-- Training rows inserted via JS -->
-                            </tbody>
+                            <tbody id="admin-training-rows"></tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- Tab 3: User Management (MODUL BAHARU) -->
+                <!-- Tab 3: User Management -->
                 <section id="admin-tab-users" class="admin-tab-content" style="display: none;">
                     <div class="action-bar">
-                        <p class="section-desc">Senarai pelanggan & pengguna yang telah berdaftar dalam portal.</p>
+                        <p class="section-desc">Senarai pengguna terdaftar yang diselaraskan dari Google Sheets.</p>
                     </div>
                     <div class="table-container">
                         <table>
@@ -779,70 +265,59 @@
                                     <th>Tindakan</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-user-rows">
-                                <!-- User rows inserted via JS -->
-                            </tbody>
+                            <tbody id="admin-user-rows"></tbody>
                         </table>
                     </div>
                 </section>
-
             </div>
-
         </main>
-
     </div>
 
-    <!-- MODAL: USER LOGIN & REGISTRATION -->
+    <!-- MODAL AUTH -->
     <div id="user-auth-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="user-auth-title">Akaun Pelanggan</h2>
                 <button class="close-btn" onclick="closeModal('user-auth-modal')">&times;</button>
             </div>
-
-            <!-- Auth Switch Tabs -->
             <div class="auth-nav-tabs">
                 <button class="auth-tab-btn active" id="tab-btn-user-login" onclick="switchUserAuthTab('login')">Log Masuk</button>
                 <button class="auth-tab-btn" id="tab-btn-user-register" onclick="switchUserAuthTab('register')">Daftar Akaun Baharu</button>
             </div>
-
-            <!-- FORM 1: User Login -->
             <form id="user-login-form" onsubmit="handleUserLogin(event)">
                 <div class="form-group">
                     <label class="form-label">Emel Perniagaan</label>
-                    <input type="email" id="user-login-email" class="form-input" placeholder="nama@syarikat.my" required>
+                    <input type="email" id="user-login-email" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kata Laluan</label>
-                    <input type="password" id="user-login-password" class="form-input" placeholder="••••••••" required>
+                    <input type="password" id="user-login-password" class="form-input" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Log Masuk</button>
             </form>
-
-            <!-- FORM 2: User Registration -->
             <form id="user-register-form" onsubmit="handleUserRegister(event)" style="display: none;">
                 <div class="form-group">
                     <label class="form-label">Nama Penuh</label>
-                    <input type="text" id="reg-name" class="form-input" placeholder="Cth: Ahmad Razak" required>
+                    <input type="text" id="reg-name" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Emel Perniagaan</label>
-                    <input type="email" id="reg-email" class="form-input" placeholder="ahmad@company.my" required>
+                    <input type="email" id="reg-email" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Nama Syarikat / Perniagaan</label>
-                    <input type="text" id="reg-company" class="form-input" placeholder="Cth: Razak Logistics Sdn Bhd" required>
+                    <input type="text" id="reg-company" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Cipta Kata Laluan</label>
-                    <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required>
+                    <input type="password" id="reg-password" class="form-input" minlength="6" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Daftar Akaun Baharu</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 1: User Booking Form -->
+    <!-- MODAL BOOKING -->
     <div id="booking-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -857,15 +332,15 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Nama Penuh Peserta</label>
-                    <input type="text" id="book-name" class="form-input" placeholder="Cth: Ahmad Razak" required>
+                    <input type="text" id="book-name" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Emel Perniagaan (Untuk Notifikasi)</label>
-                    <input type="email" id="book-email" class="form-input" placeholder="ahmad@company.my" required>
+                    <label class="form-label">Emel Perniagaan</label>
+                    <input type="email" id="book-email" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Nama Syarikat / Perniagaan</label>
-                    <input type="text" id="book-company" class="form-input" placeholder="Cth: Razak Logistics Sdn Bhd" required>
+                    <input type="text" id="book-company" class="form-input" required>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('booking-modal')">Batal</button>
@@ -875,55 +350,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Admin Add/Edit Training -->
-    <div id="training-modal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title" id="training-modal-title">Tambah Latihan Baharu</h2>
-                <button class="close-btn" onclick="closeModal('training-modal')">&times;</button>
-            </div>
-            <form id="training-form" onsubmit="saveTraining(event)">
-                <input type="hidden" id="training-id">
-                <div class="form-group">
-                    <label class="form-label">Tajuk Modul Latihan</label>
-                    <input type="text" id="tr-title" class="form-input" placeholder="Cth: Digital Marketing Mastery" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kategori</label>
-                    <select id="tr-category" class="form-select" required>
-                        <option value="Pemasaran Digital">Pemasaran Digital</option>
-                        <option value="E-Commerce Hub">E-Commerce Hub</option>
-                        <option value="Awan & Keselamatan Cyber">Awan & Keselamatan Cyber</option>
-                        <option value="Operasi & Kewangan">Operasi & Kewangan</option>
-                    </select>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label class="form-label">Tarikh Sesi</label>
-                        <input type="date" id="tr-date" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Masa Sesi</label>
-                        <input type="text" id="tr-time" class="form-input" placeholder="10:00 AM - 1:00 PM" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Jumlah Slot Disediakan</label>
-                    <input type="number" id="tr-slots" class="form-input" min="1" value="20" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Penerangan Ringkas</label>
-                    <textarea id="tr-desc" class="form-textarea" rows="3" placeholder="Penerangan objektif dan modul latihan..." required></textarea>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('training-modal')">Batal</button>
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Latihan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 3: Action Note / Reason Modal (Postpone / Cancel) -->
+    <!-- MODAL ACTION NOTE -->
     <div id="action-note-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -933,12 +360,9 @@
             <form id="action-note-form" onsubmit="submitAdminActionWithNote(event)">
                 <input type="hidden" id="action-booking-id">
                 <input type="hidden" id="action-target-status">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;" id="action-note-subtitle">
-                    Sila berikan maklumat atau tarikh baharu untuk dimaklumkan kepada peserta melalui notifikasi.
-                </p>
                 <div class="form-group">
                     <label class="form-label">Mesej / Nota Kepada Peserta</label>
-                    <textarea id="action-note-text" class="form-textarea" rows="4" placeholder="Cth: Sesi ditangguhkan ke tarikh 15 Oktober atas masalah teknikal penceramah." required></textarea>
+                    <textarea id="action-note-text" class="form-textarea" rows="4" required></textarea>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
                     <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('action-note-modal')">Batal</button>
@@ -948,24 +372,7 @@
         </div>
     </div>
 
-    <!-- MODAL 4: User Notification Center -->
-    <div id="notif-modal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">🔔 Pusat Notifikasi Status</h2>
-                <button class="close-btn" onclick="closeModal('notif-modal')">&times;</button>
-            </div>
-            <div id="notif-list-container" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem;">
-                <!-- Notifications dynamically added -->
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn btn-secondary btn-sm" onclick="clearAllNotifications()">Padam Semua Notifikasi</button>
-                <button class="btn btn-primary btn-sm" onclick="closeModal('notif-modal')">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 5: User My Bookings Modal -->
+    <!-- MODAL MY BOOKINGS -->
     <div id="my-bookings-modal" class="modal-overlay">
         <div class="modal" style="max-width: 680px;">
             <div class="modal-header">
@@ -982,141 +389,107 @@
                             <th>Catatan Admin</th>
                         </tr>
                     </thead>
-                    <tbody id="my-booking-rows">
-                        <!-- Inserted via JS -->
-                    </tbody>
+                    <tbody id="my-booking-rows"></tbody>
                 </table>
-            </div>
-            <div style="margin-top: 1.5rem; text-align: right;">
-                <button class="btn btn-secondary btn-sm" onclick="closeModal('my-bookings-modal')">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- SCRIPT APPLICATION LOGIC -->
     <script>
-        // Initial Mock Data Stores
+        // MASUKKAN URL GOOGLE APPS SCRIPT WEB APP ANDA DI SINI
+        const GOOGLE_SCRIPT_URL = "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI";
+
         let trainings = JSON.parse(localStorage.getItem('unifi_crm_trainings')) || [
-            {
-                id: 'TRN-101',
-                title: 'Pemasaran Digital & Social Commerce Mastery',
-                category: 'Pemasaran Digital',
-                date: '2026-09-15',
-                time: '09:30 AM - 12:30 PM',
-                totalSlots: 30,
-                bookedSlots: 12,
-                description: 'Kuasai strategi pengiklanan TikTok, Facebook Ads dan penggunaan SEO untuk meningkatkan jualan PKS anda.'
-            },
-            {
-                id: 'TRN-102',
-                title: 'Pengurusan Kedai Dalam Talian Unifi eCommerce Hub',
-                category: 'E-Commerce Hub',
-                date: '2026-09-22',
-                time: '02:00 PM - 05:00 PM',
-                totalSlots: 25,
-                bookedSlots: 8,
-                description: 'Panduan praktikal menguruskan inventori, pesanan, dan penyelarasan pelbagai saluran jualan e-dagang.'
-            },
-            {
-                id: 'TRN-103',
-                title: 'Keselamatan Siber & Unifi Cloud Storage untuk Perniagaan',
-                category: 'Awan & Keselamatan Cyber',
-                date: '2026-10-05',
-                time: '10:00 AM - 01:00 PM',
-                totalSlots: 20,
-                bookedSlots: 5,
-                description: 'Langkah melindungi data syarikat, pencegahan ancaman godaman, serta pengurusan awan yang selamat.'
-            }
+            { id: 'TRN-101', title: 'Pemasaran Digital & Social Commerce Mastery', category: 'Pemasaran Digital', date: '2026-09-15', time: '09:30 AM - 12:30 PM', totalSlots: 30, bookedSlots: 12, description: 'Kuasai strategi pengiklanan TikTok, Facebook Ads dan SEO.' },
+            { id: 'TRN-102', title: 'Pengurusan Kedai Dalam Talian Unifi eCommerce Hub', category: 'E-Commerce Hub', date: '2026-09-22', time: '02:00 PM - 05:00 PM', totalSlots: 25, bookedSlots: 8, description: 'Panduan menguruskan inventori dan saluran jualan e-dagang.' }
         ];
 
-        let bookings = JSON.parse(localStorage.getItem('unifi_crm_bookings')) || [
-            {
-                id: 'BK-1001',
-                trainingId: 'TRN-101',
-                trainingTitle: 'Pemasaran Digital & Social Commerce Mastery',
-                userName: 'Siti Aminah',
-                userEmail: 'siti@aminahbakery.com',
-                userCompany: 'Aminah Bakery Enterprise',
-                dateBooked: '2026-08-10',
-                status: 'Approved',
-                adminNote: 'Tempahan disahkan. Pautan Zoom akan diemelkan 1 hari sebelum sesi.'
-            }
-        ];
-
-        let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [
-            {
-                id: 'NT-1',
-                title: 'Selamat Datang ke CRM Unifi Business',
-                body: 'Sistem CRM sedia digunakan untuk pendaftaran dan pengurusan modul latihan.',
-                time: '10:00 AM',
-                unread: true
-            }
-        ];
-
-        // Registered Users Database
-        let registeredUsers = JSON.parse(localStorage.getItem('unifi_crm_users')) || [
-            {
-                name: 'Siti Aminah',
-                email: 'siti@aminahbakery.com',
-                company: 'Aminah Bakery Enterprise',
-                password: 'password123'
-            }
-        ];
-
-        // Current Active User
+        let bookings = JSON.parse(localStorage.getItem('unifi_crm_bookings')) || [];
+        let registeredUsers = JSON.parse(localStorage.getItem('unifi_crm_users')) || [];
+        let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [];
         let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
-        let isAdminLoggedIn = false;
 
-        // Save data helper
+        // FUNGSI UTAMA SYNC GOOGLE SHEETS
+        async function sendToGoogleSheet(payload) {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbw7Jsmb10mM5fI5HbVoP8SovUU_RASkLX0a9nWjYUQISP0KFbw3h5YKARQklOf2iyQESA/exec")) return;
+            
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                });
+                console.log("Sync ke Google Sheet Berjaya:", payload.action);
+            } catch (err) {
+                console.error("Gagal sync ke Google Sheet:", err);
+            }
+        }
+
+        async function fetchFromGoogleSheet() {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("MASUKKAN_URL")) return;
+
+            try {
+                showToast("Memuat turun data terkini dari Google Sheet...", "warning");
+                const res = await fetch(GOOGLE_SCRIPT_URL);
+                const data = await res.json();
+
+                if (data.users && data.users.length > 0) {
+                    registeredUsers = data.users.map(u => ({
+                        name: u.Nama || u.name,
+                        email: u.Emel || u.email,
+                        company: u.Syarikat || u.company,
+                        password: u.Password || u.password
+                    }));
+                }
+
+                if (data.bookings && data.bookings.length > 0) {
+                    bookings = data.bookings.map(b => ({
+                        id: b["ID Tempahan"] || b.id,
+                        trainingId: b["ID Latihan"] || b.trainingId,
+                        trainingTitle: b["Tajuk Latihan"] || b.trainingTitle,
+                        userName: b["Nama Peserta"] || b.userName,
+                        userEmail: b["Emel"] || b.userEmail,
+                        userCompany: b["Syarikat"] || b.userCompany,
+                        dateBooked: b["Tarikh Tempah"] || b.dateBooked,
+                        status: b["Status"] || b.status,
+                        adminNote: b["Nota Admin"] || b.adminNote
+                    }));
+                }
+
+                saveData();
+                renderAdminUsers();
+                renderAdminBookings();
+                document.getElementById('sync-indicator').innerText = "🟢 Google Sheet Active";
+                showToast("Data sedia diselaraskan!", "success");
+            } catch (err) {
+                console.error("Gagal fetch dari Google Sheet:", err);
+            }
+        }
+
         function saveData() {
             localStorage.setItem('unifi_crm_trainings', JSON.stringify(trainings));
             localStorage.setItem('unifi_crm_bookings', JSON.stringify(bookings));
-            localStorage.setItem('unifi_crm_notifications', JSON.stringify(notifications));
             localStorage.setItem('unifi_crm_users', JSON.stringify(registeredUsers));
+            localStorage.setItem('unifi_crm_notifications', JSON.stringify(notifications));
             localStorage.setItem('unifi_crm_current_user', JSON.stringify(currentUser));
         }
 
-        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             renderUserTrainings();
             renderAdminBookings();
             renderAdminTrainings();
-            renderAdminUsers(); // Load registered users table
-            updateNotificationUI();
+            renderAdminUsers();
             updateUserAuthUI();
+            
+            if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes("MASUKKAN_URL")) {
+                document.getElementById('sync-indicator').innerText = "🟢 Google Sheet Connected";
+                fetchFromGoogleSheet();
+            }
         });
 
-        /* --- USER AUTHENTICATION SYSTEM --- */
-
-        function openUserAuthModal(tab = 'login') {
-            switchUserAuthTab(tab);
-            openModal('user-auth-modal');
-        }
-
-        function switchUserAuthTab(tab) {
-            const loginForm = document.getElementById('user-login-form');
-            const regForm = document.getElementById('user-register-form');
-            const tabLoginBtn = document.getElementById('tab-btn-user-login');
-            const tabRegBtn = document.getElementById('tab-btn-user-register');
-
-            if (tab === 'login') {
-                loginForm.style.display = 'block';
-                regForm.style.display = 'none';
-                tabLoginBtn.classList.add('active');
-                tabRegBtn.classList.remove('active');
-                document.getElementById('user-auth-title').innerText = 'Log Masuk Pelanggan';
-            } else {
-                loginForm.style.display = 'none';
-                regForm.style.display = 'block';
-                tabLoginBtn.classList.remove('active');
-                tabRegBtn.classList.add('active');
-                document.getElementById('user-auth-title').innerText = 'Daftar Akaun Baharu';
-            }
-        }
-
+        /* --- USER MANAGEMENT --- */
         function handleUserRegister(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -1124,12 +497,9 @@
             const company = document.getElementById('reg-company').value.trim();
             const password = document.getElementById('reg-password').value;
 
-            // Check if email already exists
             const existing = registeredUsers.find(u => u.email === email);
             if (existing) {
-                showToast('Emel ini telah terdaftar. Sila log masuk.', 'warning');
-                switchUserAuthTab('login');
-                document.getElementById('user-login-email').value = email;
+                showToast('Emel ini telah terdaftar.', 'warning');
                 return;
             }
 
@@ -1138,255 +508,33 @@
             currentUser = newUser;
             saveData();
 
-            showToast('Pendaftaran berjaya! Anda kini log masuk.', 'success');
+            // SYNC TO GOOGLE SHEET
+            sendToGoogleSheet({ action: "addUser", user: newUser });
+
+            showToast('Pendaftaran berjaya!', 'success');
             closeModal('user-auth-modal');
             updateUserAuthUI();
-            renderAdminUsers(); // Refresh admin user table
-            document.getElementById('user-register-form').reset();
-        }
-
-        function handleUserLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('user-login-email').value.trim().toLowerCase();
-            const password = document.getElementById('user-login-password').value;
-
-            const user = registeredUsers.find(u => u.email === email && u.password === password);
-            if (!user) {
-                showToast('Emel atau kata laluan tidak sah.', 'danger');
-                return;
-            }
-
-            currentUser = user;
-            saveData();
-
-            showToast(`Selamat datang kembali, ${user.name}!`, 'success');
-            closeModal('user-auth-modal');
-            updateUserAuthUI();
-            document.getElementById('user-login-form').reset();
-        }
-
-        function handleUserLogout() {
-            currentUser = null;
-            saveData();
-            updateUserAuthUI();
-            showToast('Anda telah log keluar.', 'warning');
-        }
-
-        function updateUserAuthUI() {
-            const authContainer = document.getElementById('user-auth-section');
-            if (currentUser) {
-                authContainer.innerHTML = `
-                    <div style="text-align: right; margin-right: 0.5rem;">
-                        <span style="color: var(--secondary); display: block; line-height: 1.2;">👤 <strong>${currentUser.name}</strong></span>
-                        <small style="color: var(--text-muted); font-size: 0.75rem;">${currentUser.company}</small>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" onclick="handleUserLogout()">Log Keluar</button>
-                `;
-            } else {
-                authContainer.innerHTML = `
-                    <button class="btn btn-secondary btn-sm" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
-                `;
-            }
-        }
-
-        /* --- ROLE & VIEW NAVIGATION --- */
-
-        function switchRole(role) {
-            document.getElementById('btn-role-user').classList.toggle('active', role === 'user');
-            document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
-
-            document.getElementById('user-view').classList.toggle('active', role === 'user');
-            document.getElementById('admin-view').classList.toggle('active', role === 'admin');
-        }
-
-        function switchAdminTab(tab) {
-            const tabs = ['bookings', 'trainings', 'users'];
-            tabs.forEach((t, index) => {
-                const isActive = t === tab;
-                document.querySelectorAll('.admin-tab')[index].classList.toggle('active', isActive);
-                document.getElementById(`admin-tab-${t}`).style.display = isActive ? 'block' : 'none';
-            });
-        }
-
-        /* --- ADMIN AUTHENTICATION --- */
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('login-username').value;
-            const pass = document.getElementById('login-password').value;
-
-            if (user === 'admin' && pass === 'unifi123') {
-                isAdminLoggedIn = true;
-                document.getElementById('admin-login-screen').style.display = 'none';
-                document.getElementById('admin-dashboard-panel').style.display = 'block';
-                showToast('Log masuk Admin berjaya.', 'success');
-            } else {
-                showToast('ID atau Kata Laluan Admin Salah!', 'danger');
-            }
-        }
-
-        function handleAdminLogout() {
-            isAdminLoggedIn = false;
-            document.getElementById('admin-login-screen').style.display = 'block';
-            document.getElementById('admin-dashboard-panel').style.display = 'none';
-            showToast('Admin telah log keluar.', 'warning');
-        }
-
-        /* --- RENDERING FUNCTIONS --- */
-
-        function renderUserTrainings() {
-            const grid = document.getElementById('user-training-grid');
-            grid.innerHTML = '';
-
-            trainings.forEach(tr => {
-                const slotsLeft = tr.totalSlots - tr.bookedSlots;
-                const isFull = slotsLeft <= 0;
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div>
-                        <span class="card-tag">${tr.category}</span>
-                        <h3 class="card-title">${tr.title}</h3>
-                        <p class="card-desc">${tr.description}</p>
-                    </div>
-                    <div>
-                        <div class="card-meta">
-                            <div class="meta-item">📅 <strong>Tarikh:</strong> ${tr.date}</div>
-                            <div class="meta-item">⏰ <strong>Masa:</strong> ${tr.time}</div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="slot-badge">Kekosongan: <span class="slot-count">${slotsLeft}</span> / ${tr.totalSlots}</div>
-                            <button class="btn btn-primary btn-sm" ${isFull ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''} onclick="openBookingModal('${tr.id}')">
-                                ${isFull ? 'Slot Penuh' : 'Tempah Slot'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function renderAdminBookings() {
-            const tbody = document.getElementById('admin-booking-rows');
-            tbody.innerHTML = '';
-            document.getElementById('count-bookings').innerText = bookings.length;
-
-            if (bookings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Tiada sebarang tempahan lagi.</td></tr>`;
-                return;
-            }
-
-            bookings.forEach(bk => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${bk.userName}</strong></td>
-                    <td>${bk.userCompany}<br><small style="color:var(--text-muted);">${bk.userEmail}</small></td>
-                    <td>${bk.trainingTitle}</td>
-                    <td>${bk.dateBooked}</td>
-                    <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
-                    <td>
-                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-                            <button class="btn btn-success btn-sm" onclick="updateBookingStatus('${bk.id}', 'Approved')">✔ Lulus</button>
-                            <button class="btn btn-warning btn-sm" onclick="openActionNoteModal('${bk.id}', 'Postponed')">⏸ Tangguh</button>
-                            <button class="btn btn-danger btn-sm" onclick="openActionNoteModal('${bk.id}', 'Cancelled')">✖ Batal</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderAdminTrainings() {
-            const tbody = document.getElementById('admin-training-rows');
-            tbody.innerHTML = '';
-            document.getElementById('count-trainings').innerText = trainings.length;
-
-            trainings.forEach(tr => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${tr.title}</strong></td>
-                    <td>${tr.category}</td>
-                    <td>${tr.date}<br><small style="color:var(--text-muted);">${tr.time}</small></td>
-                    <td>${tr.bookedSlots} / ${tr.totalSlots} Terisi</td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm" onclick="openEditTrainingModal('${tr.id}')">✏ Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteTraining('${tr.id}')">🗑 Hapus</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        /* --- USER MANAGEMENT MODULE (ADMIN) --- */
-
-        function renderAdminUsers() {
-            const tbody = document.getElementById('admin-user-rows');
-            tbody.innerHTML = '';
-            document.getElementById('count-users').innerText = registeredUsers.length;
-
-            if (registeredUsers.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Tiada pengguna terdaftar.</td></tr>`;
-                return;
-            }
-
-            registeredUsers.forEach(u => {
-                // Count user's total bookings
-                const userBookingsCount = bookings.filter(b => b.userEmail.toLowerCase() === u.email.toLowerCase()).length;
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${u.name}</strong></td>
-                    <td>${u.email}</td>
-                    <td>${u.company}</td>
-                    <td><span class="status-badge status-Postponed">${userBookingsCount} Tempahan</span></td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.email}')">🗑 Padam Akaun</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            renderAdminUsers();
         }
 
         function deleteUser(email) {
-            if (confirm(`Adakah anda pasti mahu menghapuskan akaun pengguna ${email}?`)) {
+            if (confirm(`Hapus akaun pengguna ${email}?`)) {
                 registeredUsers = registeredUsers.filter(u => u.email !== email);
-                
-                // If the deleted user is currently logged in, log them out
                 if (currentUser && currentUser.email === email) {
                     currentUser = null;
                     updateUserAuthUI();
                 }
-
                 saveData();
                 renderAdminUsers();
+
+                // SYNC TO GOOGLE SHEET
+                sendToGoogleSheet({ action: "deleteUser", email: email });
+
                 showToast('Akaun pengguna telah dipadam.', 'warning');
             }
         }
 
-        /* --- BOOKING WORKFLOW --- */
-
-        function openBookingModal(trainingId) {
-            if (!currentUser) {
-                showToast('Sila log masuk atau daftar akaun terlebih dahulu untuk membuat tempahan.', 'warning');
-                openUserAuthModal('login');
-                return;
-            }
-
-            const tr = trainings.find(t => t.id === trainingId);
-            if (!tr) return;
-
-            document.getElementById('book-training-id').value = tr.id;
-            document.getElementById('book-training-title').value = tr.title;
-            
-            // Auto-fill user information if logged in
-            document.getElementById('book-name').value = currentUser.name || '';
-            document.getElementById('book-email').value = currentUser.email || '';
-            document.getElementById('book-company').value = currentUser.company || '';
-
-            openModal('booking-modal');
-        }
-
+        /* --- BOOKING MANAGEMENT --- */
         function submitBooking(e) {
             e.preventDefault();
             const trainingId = document.getElementById('book-training-id').value;
@@ -1396,7 +544,7 @@
 
             const tr = trainings.find(t => t.id === trainingId);
             if (!tr || tr.bookedSlots >= tr.totalSlots) {
-                showToast('Ralat! Slot telah penuh.', 'danger');
+                showToast('Slot penuh!', 'danger');
                 return;
             }
 
@@ -1409,57 +557,23 @@
                 userCompany: company,
                 dateBooked: new Date().toISOString().split('T')[0],
                 status: 'Pending',
-                adminNote: 'Tempahan sedang diproses oleh pihak Admin.'
+                adminNote: 'Tempahan sedang diproses.'
             };
 
             tr.bookedSlots += 1;
             bookings.push(newBooking);
-
-            // Add notification for user
-            addNotification('Tempahan Berjaya Dihantar', `Tempahan anda bagi modul "${tr.title}" kini dalam status Pending.`);
-
             saveData();
+
+            // SYNC TO GOOGLE SHEET
+            sendToGoogleSheet({ action: "addBooking", booking: newBooking });
+
             renderUserTrainings();
             renderAdminBookings();
-            renderAdminTrainings();
-            renderAdminUsers(); // Update booking count in user table
+            renderAdminUsers();
 
             closeModal('booking-modal');
             showToast('Tempahan berjaya dihantar!', 'success');
         }
-
-        /* --- MY BOOKINGS MODAL --- */
-
-        function openMyBookingsModal() {
-            if (!currentUser) {
-                showToast('Sila log masuk untuk menyemak tempahan anda.', 'warning');
-                openUserAuthModal('login');
-                return;
-            }
-
-            const myBookings = bookings.filter(b => b.userEmail.toLowerCase() === currentUser.email.toLowerCase());
-            const tbody = document.getElementById('my-booking-rows');
-            tbody.innerHTML = '';
-
-            if (myBookings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Tiada rekod tempahan ditemui untuk emel ${currentUser.email}.</td></tr>`;
-            } else {
-                myBookings.forEach(bk => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${bk.trainingTitle}</strong></td>
-                        <td>${bk.dateBooked}</td>
-                        <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
-                        <td><small>${bk.adminNote || '-'}</small></td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-
-            openModal('my-bookings-modal');
-        }
-
-        /* --- ADMIN ACTIONS & NOTIFICATION UPDATES --- */
 
         function updateBookingStatus(bookingId, status, note = '') {
             const bk = bookings.find(b => b.id === bookingId);
@@ -1467,192 +581,221 @@
 
             bk.status = status;
             if (note) bk.adminNote = note;
-            else if (status === 'Approved') bk.adminNote = 'Tempahan disahkan oleh Admin.';
-
-            addNotification(
-                `Kemaskini Status Tempahan (${status})`,
-                `Status tempahan anda untuk ${bk.trainingTitle} telah dikemaskini kepada "${status}". ${note ? 'Nota: ' + note : ''}`
-            );
 
             saveData();
             renderAdminBookings();
-            showToast(`Status tempahan ${bk.id} dikemaskini ke ${status}`, 'success');
+
+            // SYNC TO GOOGLE SHEET
+            sendToGoogleSheet({
+                action: "updateBookingStatus",
+                bookingId: bookingId,
+                status: status,
+                adminNote: bk.adminNote
+            });
+
+            showToast(`Status tempahan dikemaskini ke ${status}`, 'success');
         }
 
-        function openActionNoteModal(bookingId, status) {
-            document.getElementById('action-booking-id').value = bookingId;
-            document.getElementById('action-target-status').value = status;
-            document.getElementById('action-note-title').innerText = status === 'Postponed' ? 'Sebab Penangguhan' : 'Sebab Pembatalan';
-            document.getElementById('action-note-text').value = '';
+        /* --- RENDERERS --- */
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-user-rows');
+            tbody.innerHTML = '';
+            document.getElementById('count-users').innerText = registeredUsers.length;
 
+            registeredUsers.forEach(u => {
+                const count = bookings.filter(b => b.userEmail.toLowerCase() === u.email.toLowerCase()).length;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${u.name}</strong></td>
+                    <td>${u.email}</td>
+                    <td>${u.company}</td>
+                    <td><span class="status-badge status-Postponed">${count} Tempahan</span></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.email}')">🗑 Padam</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderAdminBookings() {
+            const tbody = document.getElementById('admin-booking-rows');
+            tbody.innerHTML = '';
+            document.getElementById('count-bookings').innerText = bookings.length;
+
+            bookings.forEach(bk => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${bk.userName}</strong></td>
+                    <td>${bk.userCompany}<br><small style="color:var(--text-muted);">${bk.userEmail}</small></td>
+                    <td>${bk.trainingTitle}</td>
+                    <td>${bk.dateBooked}</td>
+                    <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
+                    <td>
+                        <div style="display:flex; gap:0.4rem;">
+                            <button class="btn btn-success btn-sm" onclick="updateBookingStatus('${bk.id}', 'Approved')">✔ Lulus</button>
+                            <button class="btn btn-warning btn-sm" onclick="openActionNoteModal('${bk.id}', 'Postponed')">⏸ Tangguh</button>
+                            <button class="btn btn-danger btn-sm" onclick="openActionNoteModal('${bk.id}', 'Cancelled')">✖ Batal</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderUserTrainings() {
+            const grid = document.getElementById('user-training-grid');
+            grid.innerHTML = '';
+            trainings.forEach(tr => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div>
+                        <span class="card-tag">${tr.category}</span>
+                        <h3 class="card-title">${tr.title}</h3>
+                        <p class="card-desc">${tr.description}</p>
+                    </div>
+                    <div>
+                        <div class="card-meta">
+                            <div>📅 <strong>Tarikh:</strong> ${tr.date}</div>
+                            <div>⏰ <strong>Masa:</strong> ${tr.time}</div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="slot-badge">Kekosongan: <span class="slot-count">${tr.totalSlots - tr.bookedSlots}</span></div>
+                            <button class="btn btn-primary btn-sm" onclick="openBookingModal('${tr.id}')">Tempah Slot</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderAdminTrainings() {
+            const tbody = document.getElementById('admin-training-rows');
+            tbody.innerHTML = '';
+            document.getElementById('count-trainings').innerText = trainings.length;
+            trainings.forEach(tr => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${tr.title}</strong></td>
+                    <td>${tr.category}</td>
+                    <td>${tr.date} (${tr.time})</td>
+                    <td>${tr.bookedSlots} / ${tr.totalSlots}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteTraining('${tr.id}')">🗑 Hapus</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        /* --- UI UTILITIES --- */
+        function switchRole(role) {
+            document.getElementById('btn-role-user').classList.toggle('active', role === 'user');
+            document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
+            document.getElementById('user-view').classList.toggle('active', role === 'user');
+            document.getElementById('admin-view').classList.toggle('active', role === 'admin');
+        }
+
+        function switchAdminTab(tab) {
+            ['bookings', 'trainings', 'users'].forEach((t, index) => {
+                const isActive = t === tab;
+                document.querySelectorAll('.admin-tab')[index].classList.toggle('active', isActive);
+                document.getElementById(`admin-tab-${t}`).style.display = isActive ? 'block' : 'none';
+            });
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function showToast(msg, type = 'primary') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>💬</span><div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function openUserAuthModal(tab) { switchUserAuthTab(tab); openModal('user-auth-modal'); }
+        function switchUserAuthTab(tab) {
+            document.getElementById('user-login-form').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('user-register-form').style.display = tab === 'register' ? 'block' : 'none';
+        }
+
+        function handleUserLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('user-login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('user-login-password').value;
+            const user = registeredUsers.find(u => u.email === email && u.password === pass);
+            if (user) {
+                currentUser = user;
+                saveData();
+                updateUserAuthUI();
+                closeModal('user-auth-modal');
+                showToast(`Log masuk berjaya!`, 'success');
+            } else {
+                showToast('Gagal log masuk!', 'danger');
+            }
+        }
+
+        function updateUserAuthUI() {
+            const el = document.getElementById('user-auth-section');
+            if (currentUser) {
+                el.innerHTML = `<span>👤 <strong>${currentUser.name}</strong></span> <button class="btn btn-secondary btn-sm" onclick="currentUser=null;saveData();updateUserAuthUI();">Keluar</button>`;
+            } else {
+                el.innerHTML = `<button class="btn btn-secondary btn-sm" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>`;
+            }
+        }
+
+        function openBookingModal(id) {
+            if (!currentUser) return openUserAuthModal('login');
+            const tr = trainings.find(t => t.id === id);
+            document.getElementById('book-training-id').value = tr.id;
+            document.getElementById('book-training-title').value = tr.title;
+            document.getElementById('book-name').value = currentUser.name;
+            document.getElementById('book-email').value = currentUser.email;
+            document.getElementById('book-company').value = currentUser.company;
+            openModal('booking-modal');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            if (document.getElementById('login-username').value === 'admin') {
+                document.getElementById('admin-login-screen').style.display = 'none';
+                document.getElementById('admin-dashboard-panel').style.display = 'block';
+            }
+        }
+
+        function handleAdminLogout() {
+            document.getElementById('admin-login-screen').style.display = 'block';
+            document.getElementById('admin-dashboard-panel').style.display = 'none';
+        }
+
+        function openActionNoteModal(id, status) {
+            document.getElementById('action-booking-id').value = id;
+            document.getElementById('action-target-status').value = status;
             openModal('action-note-modal');
         }
 
         function submitAdminActionWithNote(e) {
             e.preventDefault();
-            const bookingId = document.getElementById('action-booking-id').value;
-            const status = document.getElementById('action-target-status').value;
-            const note = document.getElementById('action-note-text').value;
-
-            updateBookingStatus(bookingId, status, note);
+            updateBookingStatus(
+                document.getElementById('action-booking-id').value,
+                document.getElementById('action-target-status').value,
+                document.getElementById('action-note-text').value
+            );
             closeModal('action-note-modal');
         }
 
-        /* --- TRAINING MODULE CRUD (ADMIN) --- */
-
-        function openAddTrainingModal() {
-            document.getElementById('training-modal-title').innerText = 'Tambah Latihan Baharu';
-            document.getElementById('training-id').value = '';
-            document.getElementById('training-form').reset();
-            openModal('training-modal');
-        }
-
-        function openEditTrainingModal(id) {
-            const tr = trainings.find(t => t.id === id);
-            if (!tr) return;
-
-            document.getElementById('training-modal-title').innerText = 'Kemaskini Modul Latihan';
-            document.getElementById('training-id').value = tr.id;
-            document.getElementById('tr-title').value = tr.title;
-            document.getElementById('tr-category').value = tr.category;
-            document.getElementById('tr-date').value = tr.date;
-            document.getElementById('tr-time').value = tr.time;
-            document.getElementById('tr-slots').value = tr.totalSlots;
-            document.getElementById('tr-desc').value = tr.description;
-
-            openModal('training-modal');
-        }
-
-        function saveTraining(e) {
-            e.preventDefault();
-            const id = document.getElementById('training-id').value;
-            const title = document.getElementById('tr-title').value;
-            const category = document.getElementById('tr-category').value;
-            const date = document.getElementById('tr-date').value;
-            const time = document.getElementById('tr-time').value;
-            const slots = parseInt(document.getElementById('tr-slots').value);
-            const desc = document.getElementById('tr-desc').value;
-
-            if (id) {
-                // Edit existing
-                const tr = trainings.find(t => t.id === id);
-                if (tr) {
-                    tr.title = title;
-                    tr.category = category;
-                    tr.date = date;
-                    tr.time = time;
-                    tr.totalSlots = slots;
-                    tr.description = desc;
-                    showToast('Latihan berjaya dikemaskini!', 'success');
-                }
-            } else {
-                // Add new
-                const newTraining = {
-                    id: 'TRN-' + Math.floor(100 + Math.random() * 900),
-                    title: title,
-                    category: category,
-                    date: date,
-                    time: time,
-                    totalSlots: slots,
-                    bookedSlots: 0,
-                    description: desc
-                };
-                trainings.push(newTraining);
-                showToast('Latihan baharu berjaya ditambah!', 'success');
-            }
-
-            saveData();
-            renderUserTrainings();
-            renderAdminTrainings();
-            closeModal('training-modal');
-        }
-
-        function deleteTraining(id) {
-            if (confirm('Adakah anda pasti mahu menghapuskan latihan ini?')) {
-                trainings = trainings.filter(t => t.id !== id);
-                saveData();
-                renderUserTrainings();
-                renderAdminTrainings();
-                showToast('Latihan telah dipadam.', 'warning');
-            }
-        }
-
-        /* --- NOTIFICATION SYSTEM --- */
-
-        function addNotification(title, body) {
-            const newNotif = {
-                id: 'NT-' + Date.now(),
-                title: title,
-                body: body,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                unread: true
-            };
-            notifications.unshift(newNotif);
-            saveData();
-            updateNotificationUI();
-        }
-
-        function updateNotificationUI() {
-            const unreadCount = notifications.filter(n => n.unread).length;
-            document.getElementById('notif-count').innerText = unreadCount;
-
-            const listContainer = document.getElementById('notif-list-container');
-            listContainer.innerHTML = '';
-
-            if (notifications.length === 0) {
-                listContainer.innerHTML = `<p style="padding:1rem; text-align:center; color:var(--text-muted);">Tiada notifikasi.</p>`;
-                return;
-            }
-
-            notifications.forEach(n => {
-                const item = document.createElement('div');
-                item.className = `notif-item ${n.unread ? 'unread' : ''}`;
-                item.innerHTML = `
-                    <div class="notif-header">
-                        <span class="notif-title">${n.title}</span>
-                        <span class="notif-time">${n.time}</span>
-                    </div>
-                    <div class="notif-body">${n.body}</div>
-                `;
-                listContainer.appendChild(item);
-            });
-        }
-
-        function openNotifModal() {
-            // Mark all as read when opening
-            notifications.forEach(n => n.unread = false);
-            saveData();
-            updateNotificationUI();
-            openModal('notif-modal');
-        }
-
-        function clearAllNotifications() {
-            notifications = [];
-            saveData();
-            updateNotificationUI();
-            showToast('Semua notifikasi telah dipadam.', 'warning');
-        }
-
-        /* --- MODAL & TOAST HELPERS --- */
-
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function showToast(message, type = 'primary') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<span>💬</span><div>${message}</div>`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 5000);
+        function openMyBookingsModal() {
+            if (!currentUser) return openUserAuthModal('login');
+            const myBookings = bookings.filter(b => b.userEmail.toLowerCase() === currentUser.email.toLowerCase());
+            const tbody = document.getElementById('my-booking-rows');
+            tbody.innerHTML = myBookings.length ? myBookings.map(b => `
+                <tr>
+                    <td><strong>${b.trainingTitle}</strong></td>
+                    <td>${b.dateBooked}</td>
+                    <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+                    <td><small>${b.adminNote || '-'}</small></td>
+                </tr>
+            `).join('') : `<tr><td colspan="4" style="text-align:center;">Tiada rekod tempahan.</td></tr>`;
+            openModal('my-bookings-modal');
         }
     </script>
 </body>
