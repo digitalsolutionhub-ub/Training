@@ -111,6 +111,14 @@
             box-shadow: 0 4px 12px rgba(255, 88, 0, 0.25);
         }
 
+        .user-auth-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
         .notif-bell {
             position: relative;
             background: var(--bg);
@@ -277,12 +285,6 @@
             color: var(--text-main);
         }
 
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
         .card-footer {
             display: flex;
             justify-content: space-between;
@@ -336,37 +338,43 @@
             background: #E2E8F0;
         }
 
-        .btn-success {
-            background: var(--status-approved-bg);
-            color: var(--status-approved);
-        }
+        .btn-success { background: var(--status-approved-bg); color: var(--status-approved); }
+        .btn-success:hover { background: #BBF7D0; }
 
-        .btn-success:hover {
-            background: #BBF7D0;
-        }
+        .btn-warning { background: var(--status-postponed-bg); color: var(--status-postponed); }
+        .btn-warning:hover { background: #BAE6FD; }
 
-        .btn-warning {
-            background: var(--status-postponed-bg);
-            color: var(--status-postponed);
-        }
-
-        .btn-warning:hover {
-            background: #BAE6FD;
-        }
-
-        .btn-danger {
-            background: var(--status-cancelled-bg);
-            color: var(--status-cancelled);
-        }
-
-        .btn-danger:hover {
-            background: #FCA5A5;
-        }
+        .btn-danger { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
+        .btn-danger:hover { background: #FCA5A5; }
 
         .btn-sm {
             padding: 0.4rem 0.85rem;
             font-size: 0.8rem;
             border-radius: 8px;
+        }
+
+        /* --- Auth Tabs inside Auth Modal --- */
+        .auth-nav-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .auth-tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         /* --- Admin View & Tabs --- */
@@ -444,13 +452,8 @@
             vertical-align: middle;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: #FAFBFD;
-        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #FAFBFD; }
 
         .status-badge {
             display: inline-block;
@@ -528,13 +531,9 @@
             transition: var(--transition);
         }
 
-        .close-btn:hover {
-            color: var(--text-main);
-        }
+        .close-btn:hover { color: var(--text-main); }
 
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
+        .form-group { margin-bottom: 1.25rem; }
 
         .form-label {
             display: block;
@@ -599,7 +598,6 @@
             to { opacity: 0; pointer-events: none; }
         }
 
-        /* --- Notification List Item --- */
         .notif-item {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
@@ -609,13 +607,7 @@
             transition: var(--transition);
         }
 
-        .notif-item:last-child {
-            border-bottom: none;
-        }
-
-        .notif-item.unread {
-            background: var(--primary-light);
-        }
+        .notif-item:last-child { border-bottom: none; }
 
         .notif-header {
             display: flex;
@@ -623,27 +615,13 @@
             align-items: center;
         }
 
-        .notif-title {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--secondary);
-        }
+        .notif-title { font-weight: 700; font-size: 0.9rem; color: var(--secondary); }
+        .notif-time { font-size: 0.75rem; color: var(--text-muted); }
+        .notif-body { font-size: 0.85rem; color: var(--text-main); line-height: 1.4; }
 
-        .notif-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .notif-body {
-            font-size: 0.85rem;
-            color: var(--text-main);
-            line-height: 1.4;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .header-actions { width: 100%; justify-content: space-between; }
+            .header-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
             .container { padding: 1.5rem 1rem; }
             .action-bar { flex-direction: column; gap: 1rem; align-items: stretch; }
             .table-container { overflow-x: auto; }
@@ -660,10 +638,16 @@
             <span>Business CRM</span>
         </a>
         <div class="header-actions">
+            <!-- User Login / Account Section -->
+            <div id="user-auth-section" class="user-auth-badge">
+                <button class="btn btn-secondary btn-sm" id="btn-open-user-auth" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
+            </div>
+
             <div class="role-switcher">
                 <button class="role-btn active" id="btn-role-user" onclick="switchRole('user')">Pandangan Pelanggan</button>
                 <button class="role-btn" id="btn-role-admin" onclick="switchRole('admin')">Mod Admin CRM</button>
             </div>
+            
             <!-- Notification Bell for Users/Admin -->
             <div class="notif-bell" onclick="openNotifModal()" title="Pusat Notifikasi">
                 🔔
@@ -782,6 +766,56 @@
 
     </div>
 
+    <!-- MODAL: USER LOGIN & REGISTRATION -->
+    <div id="user-auth-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="user-auth-title">Akaun Pelanggan</h2>
+                <button class="close-btn" onclick="closeModal('user-auth-modal')">&times;</button>
+            </div>
+
+            <!-- Auth Switch Tabs -->
+            <div class="auth-nav-tabs">
+                <button class="auth-tab-btn active" id="tab-btn-user-login" onclick="switchUserAuthTab('login')">Log Masuk</button>
+                <button class="auth-tab-btn" id="tab-btn-user-register" onclick="switchUserAuthTab('register')">Daftar Akaun Baharu</button>
+            </div>
+
+            <!-- FORM 1: User Login -->
+            <form id="user-login-form" onsubmit="handleUserLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Emel Perniagaan</label>
+                    <input type="email" id="user-login-email" class="form-input" placeholder="nama@syarikat.my" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kata Laluan</label>
+                    <input type="password" id="user-login-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Log Masuk</button>
+            </form>
+
+            <!-- FORM 2: User Registration -->
+            <form id="user-register-form" onsubmit="handleUserRegister(event)" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Nama Penuh</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="Cth: Ahmad Razak" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Emel Perniagaan</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="ahmad@company.my" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama Syarikat / Perniagaan</label>
+                    <input type="text" id="reg-company" class="form-input" placeholder="Cth: Razak Logistics Sdn Bhd" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cipta Kata Laluan</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Daftar Akaun Baharu</button>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL 1: User Booking Form -->
     <div id="booking-modal" class="modal-overlay">
         <div class="modal">
@@ -878,7 +912,7 @@
                 </p>
                 <div class="form-group">
                     <label class="form-label">Mesej / Nota Kepada Peserta</label>
-                    <textarea id="action-note-text" class="form-textarea" rows="4" placeholder="Cth: Sesi ditangguhkan ke tarikh 15 Oktober 2026 atas masalah teknikal penceramah." required></textarea>
+                    <textarea id="action-note-text" class="form-textarea" rows="4" placeholder="Cth: Sesi ditangguhkan ke tarikh 15 Oktober atas masalah teknikal penceramah." required></textarea>
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
                     <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('action-note-modal')">Batal</button>
@@ -905,421 +939,513 @@
         </div>
     </div>
 
-    <!-- MODAL 5: Check My Bookings Modal (For Users) -->
+    <!-- MODAL 5: User My Bookings Modal -->
     <div id="my-bookings-modal" class="modal-overlay">
-        <div class="modal" style="max-width: 650px;">
+        <div class="modal" style="max-width: 680px;">
             <div class="modal-header">
-                <h2 class="modal-title">📋 Semak Status Tempahan Saya</h2>
+                <h2 class="modal-title">📋 Status Tempahan Saya</h2>
                 <button class="close-btn" onclick="closeModal('my-bookings-modal')">&times;</button>
             </div>
-            <div class="form-group">
-                <label class="form-label">Masukkan Emel Anda untuk Carian</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="email" id="search-user-email" class="form-input" placeholder="Cth: kamarul@azmanenterprise.com">
-                    <button class="btn btn-primary" onclick="searchUserBookings()">Cari</button>
-                </div>
+            <div class="table-container" style="max-height: 380px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Latihan</th>
+                            <th>Tarikh</th>
+                            <th>Status</th>
+                            <th>Catatan Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-booking-rows">
+                        <!-- Inserted via JS -->
+                    </tbody>
+                </table>
             </div>
-            <div id="my-bookings-result" style="margin-top: 1.5rem;">
-                <!-- Results will be displayed here -->
+            <div style="margin-top: 1.5rem; text-align: right;">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('my-bookings-modal')">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification Overlay Container -->
+    <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- JavaScript Engine -->
+    <!-- SCRIPT APPLICATION LOGIC -->
     <script>
-        // --- INITIAL DATA & STORAGE ---
-        const INITIAL_TRAININGS = [
+        // Initial Mock Data Stores
+        let trainings = JSON.parse(localStorage.getItem('unifi_crm_trainings')) || [
             {
-                id: 'tr-101',
-                title: 'Strategi Pemasaran Digital TikTok & Meta Ads',
+                id: 'TRN-101',
+                title: 'Pemasaran Digital & Social Commerce Mastery',
                 category: 'Pemasaran Digital',
                 date: '2026-09-15',
                 time: '09:30 AM - 12:30 PM',
-                slots: 25,
-                booked: 18,
-                description: 'Kuasai teknik kempen iklan berprestasi tinggi untuk memperluaskan jangkauan perniagaan SME anda.'
+                totalSlots: 30,
+                bookedSlots: 12,
+                description: 'Kuasai strategi pengiklanan TikTok, Facebook Ads dan penggunaan SEO untuk meningkatkan jualan PKS anda.'
             },
             {
-                id: 'tr-102',
-                title: 'Pengurusan Kedai Dalam Talian melalui E-Commerce Hub',
+                id: 'TRN-102',
+                title: 'Pengurusan Kedai Dalam Talian Unifi eCommerce Hub',
                 category: 'E-Commerce Hub',
                 date: '2026-09-22',
                 time: '02:00 PM - 05:00 PM',
-                slots: 20,
-                booked: 20,
-                description: 'Integrasi inventori, sistem pembayaran automatik, dan pengurusan tempahan berpusat.'
+                totalSlots: 25,
+                bookedSlots: 8,
+                description: 'Panduan praktikal menguruskan inventori, pesanan, dan penyelarasan pelbagai saluran jualan e-dagang.'
             },
             {
-                id: 'tr-103',
-                title: 'Asas Keselamatan Siber & Unifi Cloud Storage',
+                id: 'TRN-103',
+                title: 'Keselamatan Siber & Unifi Cloud Storage untuk Perniagaan',
                 category: 'Awan & Keselamatan Cyber',
                 date: '2026-10-05',
                 time: '10:00 AM - 01:00 PM',
-                slots: 30,
-                booked: 8,
-                description: 'Lindungi data sulit perniagaan serta optimumkan storan awan Unifi untuk produktiviti pasukan.'
+                totalSlots: 20,
+                bookedSlots: 5,
+                description: 'Langkah melindungi data syarikat, pencegahan ancaman godaman, serta pengurusan awan yang selamat.'
             }
         ];
 
-        const INITIAL_BOOKINGS = [
+        let bookings = JSON.parse(localStorage.getItem('unifi_crm_bookings')) || [
             {
-                id: 'bk-501',
-                trainingId: 'tr-101',
-                name: 'Kamarul Azman',
-                email: 'kamarul@azmanenterprise.com',
-                company: 'Azman Enterprise',
-                status: 'Pending',
-                dateBooked: '2026-08-10'
-            },
-            {
-                id: 'bk-502',
-                trainingId: 'tr-102',
-                name: 'Siti Nurhaliza Hassan',
-                email: 'siti@murni-cafe.my',
-                company: 'Murni Cafe Group',
+                id: 'BK-1001',
+                trainingId: 'TRN-101',
+                trainingTitle: 'Pemasaran Digital & Social Commerce Mastery',
+                userName: 'Siti Aminah',
+                userEmail: 'siti@aminahbakery.com',
+                userCompany: 'Aminah Bakery Enterprise',
+                dateBooked: '2026-08-10',
                 status: 'Approved',
-                dateBooked: '2026-08-09'
+                adminNote: 'Tempahan disahkan. Pautan Zoom akan diemelkan 1 hari sebelum sesi.'
             }
         ];
 
-        const INITIAL_NOTIFICATIONS = [
+        let notifications = JSON.parse(localStorage.getItem('unifi_crm_notifications')) || [
             {
-                id: 'nt-1',
-                bookingId: 'bk-502',
-                userEmail: 'siti@murni-cafe.my',
-                title: 'Tempahan Diluluskan! 🎉',
-                message: 'Tahniah Siti! Tempahan anda untuk modul "Pengurusan Kedai Dalam Talian" telah DILULUSKAN oleh Admin.',
-                type: 'Approved',
-                timestamp: '2026-08-09 14:30',
-                read: false
+                id: 'NT-1',
+                title: 'Selamat Datang ke CRM Unifi Business',
+                body: 'Sistem CRM sedia digunakan untuk pendaftaran dan pengurusan modul latihan.',
+                time: '10:00 AM',
+                unread: true
             }
         ];
 
-        function getData(key, fallback) {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : fallback;
-        }
-
-        function saveData(key, value) {
-            localStorage.setItem(key, JSON.stringify(value));
-        }
-
-        let trainings = getData('ub_trainings', INITIAL_TRAININGS);
-        let bookings = getData('ub_bookings', INITIAL_BOOKINGS);
-        let notifications = getData('ub_notifications', INITIAL_NOTIFICATIONS);
-        let isAdminLoggedIn = sessionStorage.getItem('ub_admin_auth') === 'true';
-
-        // --- AUTH & ROLE SWITCHING ---
-        function switchRole(role) {
-            document.getElementById('btn-role-user').classList.remove('active');
-            document.getElementById('btn-role-admin').classList.remove('active');
-            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
-
-            if (role === 'user') {
-                document.getElementById('btn-role-user').classList.add('active');
-                document.getElementById('user-view').classList.add('active');
-                renderUserTrainings();
-            } else {
-                document.getElementById('btn-role-admin').classList.add('active');
-                document.getElementById('admin-view').classList.add('active');
-                
-                if (isAdminLoggedIn) {
-                    document.getElementById('admin-login-screen').style.display = 'none';
-                    document.getElementById('admin-dashboard-panel').style.display = 'block';
-                    renderAdminDashboard();
-                } else {
-                    document.getElementById('admin-login-screen').style.display = 'block';
-                    document.getElementById('admin-dashboard-panel').style.display = 'none';
-                }
+        // Registered Users Database
+        let registeredUsers = JSON.parse(localStorage.getItem('unifi_crm_users')) || [
+            {
+                name: 'Siti Aminah',
+                email: 'siti@aminahbakery.com',
+                company: 'Aminah Bakery Enterprise',
+                password: 'password123'
             }
-            updateNotifBadge();
+        ];
+
+        // Current Active User
+        let currentUser = JSON.parse(localStorage.getItem('unifi_crm_current_user')) || null;
+        let isAdminLoggedIn = false;
+
+        // Save data helper
+        function saveData() {
+            localStorage.setItem('unifi_crm_trainings', JSON.stringify(trainings));
+            localStorage.setItem('unifi_crm_bookings', JSON.stringify(bookings));
+            localStorage.setItem('unifi_crm_notifications', JSON.stringify(notifications));
+            localStorage.setItem('unifi_crm_users', JSON.stringify(registeredUsers));
+            localStorage.setItem('unifi_crm_current_user', JSON.stringify(currentUser));
         }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUserTrainings();
+            renderAdminBookings();
+            renderAdminTrainings();
+            updateNotificationUI();
+            updateUserAuthUI();
+        });
+
+        /* --- USER AUTHENTICATION SYSTEM --- */
+
+        function openUserAuthModal(tab = 'login') {
+            switchUserAuthTab(tab);
+            openModal('user-auth-modal');
+        }
+
+        function switchUserAuthTab(tab) {
+            const loginForm = document.getElementById('user-login-form');
+            const regForm = document.getElementById('user-register-form');
+            const tabLoginBtn = document.getElementById('tab-btn-user-login');
+            const tabRegBtn = document.getElementById('tab-btn-user-register');
+
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                regForm.style.display = 'none';
+                tabLoginBtn.classList.add('active');
+                tabRegBtn.classList.remove('active');
+                document.getElementById('user-auth-title').innerText = 'Log Masuk Pelanggan';
+            } else {
+                loginForm.style.display = 'none';
+                regForm.style.display = 'block';
+                tabLoginBtn.classList.remove('active');
+                tabRegBtn.classList.add('active');
+                document.getElementById('user-auth-title').innerText = 'Daftar Akaun Baharu';
+            }
+        }
+
+        function handleUserRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const company = document.getElementById('reg-company').value.trim();
+            const password = document.getElementById('reg-password').value;
+
+            // Check if email already exists
+            const existing = registeredUsers.find(u => u.email === email);
+            if (existing) {
+                showToast('Emel ini telah terdaftar. Sila log masuk.', 'warning');
+                switchUserAuthTab('login');
+                document.getElementById('user-login-email').value = email;
+                return;
+            }
+
+            const newUser = { name, email, company, password };
+            registeredUsers.push(newUser);
+            currentUser = newUser;
+            saveData();
+
+            showToast('Pendaftaran berjaya! Anda kini log masuk.', 'success');
+            closeModal('user-auth-modal');
+            updateUserAuthUI();
+            document.getElementById('user-register-form').reset();
+        }
+
+        function handleUserLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('user-login-email').value.trim().toLowerCase();
+            const password = document.getElementById('user-login-password').value;
+
+            const user = registeredUsers.find(u => u.email === email && u.password === password);
+            if (!user) {
+                showToast('Emel atau kata laluan tidak sah.', 'danger');
+                return;
+            }
+
+            currentUser = user;
+            saveData();
+
+            showToast(`Selamat datang kembali, ${user.name}!`, 'success');
+            closeModal('user-auth-modal');
+            updateUserAuthUI();
+            document.getElementById('user-login-form').reset();
+        }
+
+        function handleUserLogout() {
+            currentUser = null;
+            saveData();
+            updateUserAuthUI();
+            showToast('Anda telah log keluar.', 'warning');
+        }
+
+        function updateUserAuthUI() {
+            const authContainer = document.getElementById('user-auth-section');
+            if (currentUser) {
+                authContainer.innerHTML = `
+                    <div style="text-align: right; margin-right: 0.5rem;">
+                        <span style="color: var(--secondary); display: block; line-height: 1.2;">👤 <strong>${currentUser.name}</strong></span>
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">${currentUser.company}</small>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="handleUserLogout()">Log Keluar</button>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button class="btn btn-secondary btn-sm" onclick="openUserAuthModal('login')">🔑 Log Masuk / Daftar</button>
+                `;
+            }
+        }
+
+        /* --- ROLE & VIEW NAVIGATION --- */
+
+        function switchRole(role) {
+            document.getElementById('btn-role-user').classList.toggle('active', role === 'user');
+            document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
+
+            document.getElementById('user-view').classList.toggle('active', role === 'user');
+            document.getElementById('admin-view').classList.toggle('active', role === 'admin');
+        }
+
+        function switchAdminTab(tab) {
+            const isBookings = tab === 'bookings';
+            document.querySelectorAll('.admin-tab')[0].classList.toggle('active', isBookings);
+            document.querySelectorAll('.admin-tab')[1].classList.toggle('active', !isBookings);
+
+            document.getElementById('admin-tab-bookings').style.display = isBookings ? 'block' : 'none';
+            document.getElementById('admin-tab-trainings').style.display = !isBookings ? 'block' : 'none';
+        }
+
+        /* --- ADMIN AUTHENTICATION --- */
 
         function handleAdminLogin(e) {
             e.preventDefault();
-            const u = document.getElementById('login-username').value.trim();
-            const p = document.getElementById('login-password').value.trim();
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
 
-            if (u === 'admin' && p === 'unifi123') {
+            if (user === 'admin' && pass === 'unifi123') {
                 isAdminLoggedIn = true;
-                sessionStorage.setItem('ub_admin_auth', 'true');
-                showToast('Log Masuk Berjaya', 'Selamat datang Admin Unifi Business!', 'success');
-                switchRole('admin');
+                document.getElementById('admin-login-screen').style.display = 'none';
+                document.getElementById('admin-dashboard-panel').style.display = 'block';
+                showToast('Log masuk Admin berjaya.', 'success');
             } else {
-                showToast('Ralat Log Masuk', 'ID Pengguna atau Kata Laluan Salah!', 'danger');
+                showToast('ID atau Kata Laluan Admin Salah!', 'danger');
             }
         }
 
         function handleAdminLogout() {
             isAdminLoggedIn = false;
-            sessionStorage.removeItem('ub_admin_auth');
-            showToast('Log Keluar', 'Anda telah keluar dari akaun Admin.', 'warning');
-            switchRole('admin');
+            document.getElementById('admin-login-screen').style.display = 'block';
+            document.getElementById('admin-dashboard-panel').style.display = 'none';
+            showToast('Admin telah log keluar.', 'warning');
         }
 
-        // --- USER VIEW FUNCTIONS ---
+        /* --- RENDERING FUNCTIONS --- */
+
         function renderUserTrainings() {
             const grid = document.getElementById('user-training-grid');
             grid.innerHTML = '';
 
             trainings.forEach(tr => {
-                const availableSlots = tr.slots - tr.booked;
-                const isFull = availableSlots <= 0;
+                const slotsLeft = tr.totalSlots - tr.bookedSlots;
+                const isFull = slotsLeft <= 0;
 
-                const cardHtml = `
-                    <div class="card">
-                        <div>
-                            <span class="card-tag">${tr.category}</span>
-                            <h3 class="card-title">${tr.title}</h3>
-                            <p class="card-desc">${tr.description}</p>
-                            <div class="card-meta">
-                                <div class="meta-item">📅 <strong>Tarikh:</strong> ${tr.date}</div>
-                                <div class="meta-item">⏰ <strong>Masa:</strong> ${tr.time}</div>
-                            </div>
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div>
+                        <span class="card-tag">${tr.category}</span>
+                        <h3 class="card-title">${tr.title}</h3>
+                        <p class="card-desc">${tr.description}</p>
+                    </div>
+                    <div>
+                        <div class="card-meta">
+                            <div class="meta-item">📅 <strong>Tarikh:</strong> ${tr.date}</div>
+                            <div class="meta-item">⏰ <strong>Masa:</strong> ${tr.time}</div>
                         </div>
                         <div class="card-footer">
-                            <div class="slot-badge">
-                                Baki Slot: <span class="slot-count">${availableSlots}</span> / ${tr.slots}
-                            </div>
-                            <button class="btn btn-primary btn-sm" 
-                                onclick="openBookingModal('${tr.id}')" ${isFull ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
-                                ${isFull ? 'Penuh' : 'Tempah Slot'}
+                            <div class="slot-badge">Kekosongan: <span class="slot-count">${slotsLeft}</span> / ${tr.totalSlots}</div>
+                            <button class="btn btn-primary btn-sm" ${isFull ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''} onclick="openBookingModal('${tr.id}')">
+                                ${isFull ? 'Slot Penuh' : 'Tempah Slot'}
                             </button>
                         </div>
                     </div>
                 `;
-                grid.innerHTML += cardHtml;
+                grid.appendChild(card);
             });
         }
 
+        function renderAdminBookings() {
+            const tbody = document.getElementById('admin-booking-rows');
+            tbody.innerHTML = '';
+            document.getElementById('count-bookings').innerText = bookings.length;
+
+            if (bookings.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Tiada sebarang tempahan lagi.</td></tr>`;
+                return;
+            }
+
+            bookings.forEach(bk => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${bk.userName}</strong></td>
+                    <td>${bk.userCompany}<br><small style="color:var(--text-muted);">${bk.userEmail}</small></td>
+                    <td>${bk.trainingTitle}</td>
+                    <td>${bk.dateBooked}</td>
+                    <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
+                    <td>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button class="btn btn-success btn-sm" onclick="updateBookingStatus('${bk.id}', 'Approved')">✔ Lulus</button>
+                            <button class="btn btn-warning btn-sm" onclick="openActionNoteModal('${bk.id}', 'Postponed')">⏸ Tangguh</button>
+                            <button class="btn btn-danger btn-sm" onclick="openActionNoteModal('${bk.id}', 'Cancelled')">✖ Batal</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderAdminTrainings() {
+            const tbody = document.getElementById('admin-training-rows');
+            tbody.innerHTML = '';
+            document.getElementById('count-trainings').innerText = trainings.length;
+
+            trainings.forEach(tr => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${tr.title}</strong></td>
+                    <td>${tr.category}</td>
+                    <td>${tr.date}<br><small style="color:var(--text-muted);">${tr.time}</small></td>
+                    <td>${tr.bookedSlots} / ${tr.totalSlots} Terisi</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" onclick="openEditTrainingModal('${tr.id}')">✏ Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTraining('${tr.id}')">🗑 Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        /* --- BOOKING WORKFLOW --- */
+
         function openBookingModal(trainingId) {
+            if (!currentUser) {
+                showToast('Sila log masuk atau daftar akaun terlebih dahulu untuk membuat tempahan.', 'warning');
+                openUserAuthModal('login');
+                return;
+            }
+
             const tr = trainings.find(t => t.id === trainingId);
             if (!tr) return;
 
             document.getElementById('book-training-id').value = tr.id;
             document.getElementById('book-training-title').value = tr.title;
-            document.getElementById('booking-modal').classList.add('active');
+            
+            // Auto-fill user information if logged in
+            document.getElementById('book-name').value = currentUser.name || '';
+            document.getElementById('book-email').value = currentUser.email || '';
+            document.getElementById('book-company').value = currentUser.company || '';
+
+            openModal('booking-modal');
         }
 
         function submitBooking(e) {
             e.preventDefault();
             const trainingId = document.getElementById('book-training-id').value;
             const name = document.getElementById('book-name').value;
-            const email = document.getElementById('book-email').value.toLowerCase().trim();
+            const email = document.getElementById('book-email').value;
             const company = document.getElementById('book-company').value;
 
-            const newBooking = {
-                id: 'bk-' + Date.now(),
-                trainingId,
-                name,
-                email,
-                company,
-                status: 'Pending',
-                dateBooked: new Date().toISOString().split('T')[0]
-            };
-
-            // Update training booked counter
             const tr = trainings.find(t => t.id === trainingId);
-            if (tr) tr.booked += 1;
-
-            bookings.push(newBooking);
-            saveData('ub_bookings', bookings);
-            saveData('ub_trainings', trainings);
-
-            // Create submission notification for user
-            createNotification(
-                newBooking.id,
-                email,
-                'Tempahan Baharu Dihantar 📩',
-                `Permohonan tempahan anda untuk "${tr.title}" telah berjaya diterima dan kini sedang disemak oleh Admin Unifi.`,
-                'Pending'
-            );
-
-            closeModal('booking-modal');
-            document.getElementById('booking-form').reset();
-            showToast('Tempahan Berjaya', 'Permohonan anda telah dihantar. Semak emel/notifikasi anda!', 'success');
-            renderUserTrainings();
-        }
-
-        // --- ADMIN MANAGEMENT & NOTIFICATION LOGIC ---
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById('admin-tab-bookings').style.display = 'none';
-            document.getElementById('admin-tab-trainings').style.display = 'none';
-
-            if (tabName === 'bookings') {
-                event.target.classList.add('active');
-                document.getElementById('admin-tab-bookings').style.display = 'block';
-            } else {
-                event.target.classList.add('active');
-                document.getElementById('admin-tab-trainings').style.display = 'block';
-            }
-        }
-
-        function renderAdminDashboard() {
-            document.getElementById('count-bookings').innerText = bookings.length;
-            document.getElementById('count-trainings').innerText = trainings.length;
-
-            renderAdminBookings();
-            renderAdminTrainings();
-        }
-
-        function renderAdminBookings() {
-            const tbody = document.getElementById('admin-booking-rows');
-            tbody.innerHTML = '';
-
-            if (bookings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 2rem;">Tiada rekod tempahan ditemui.</td></tr>`;
+            if (!tr || tr.bookedSlots >= tr.totalSlots) {
+                showToast('Ralat! Slot telah penuh.', 'danger');
                 return;
             }
 
-            bookings.forEach(bk => {
-                const tr = trainings.find(t => t.id === bk.trainingId) || { title: 'Modul Latihan' };
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${bk.name}</strong></td>
-                        <td>${bk.company}<br><small style="color:var(--text-muted);">${bk.email}</small></td>
-                        <td>${tr.title}</td>
-                        <td>${bk.dateBooked}</td>
-                        <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
-                        <td>
-                            <div style="display:flex; gap:0.35rem; flex-wrap: wrap;">
-                                <button class="btn btn-success btn-sm" onclick="quickApproveBooking('${bk.id}')">✓ Lulus</button>
-                                <button class="btn btn-warning btn-sm" onclick="openActionNoteModal('${bk.id}', 'Postponed')">⏱ Tangguh</button>
-                                <button class="btn btn-danger btn-sm" onclick="openActionNoteModal('${bk.id}', 'Cancelled')">✕ Batal</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
+            const newBooking = {
+                id: 'BK-' + Math.floor(1000 + Math.random() * 9000),
+                trainingId: tr.id,
+                trainingTitle: tr.title,
+                userName: name,
+                userEmail: email,
+                userCompany: company,
+                dateBooked: new Date().toISOString().split('T')[0],
+                status: 'Pending',
+                adminNote: 'Tempahan sedang diproses oleh pihak Admin.'
+            };
+
+            tr.bookedSlots += 1;
+            bookings.push(newBooking);
+
+            // Add notification for user
+            addNotification('Tempahan Berjaya Dihantar', `Tempahan anda bagi modul "${tr.title}" kini dalam status Pending.`);
+
+            saveData();
+            renderUserTrainings();
+            renderAdminBookings();
+            renderAdminTrainings();
+
+            closeModal('booking-modal');
+            showToast('Tempahan berjaya dihantar!', 'success');
         }
 
-        function quickApproveBooking(bookingId) {
-            const bk = bookings.find(b => b.id === bookingId);
-            if (!bk) return;
+        /* --- MY BOOKINGS MODAL --- */
 
-            bk.status = 'Approved';
-            saveData('ub_bookings', bookings);
-
-            const tr = trainings.find(t => t.id === bk.trainingId) || { title: 'Latihan Unifi' };
-
-            // Trigger Notification to User
-            createNotification(
-                bk.id,
-                bk.email,
-                'Tempahan LATIHAN DILULUSKAN! 🎉',
-                `Tahniah ${bk.name}! Admin Unifi telah MELULUSKAN tempahan anda untuk sesi: "${tr.title}". Sila bersedia pada tarikh latihan.`,
-                'Approved'
-            );
-
-            showToast('Notifikasi Dihantar', `Status [Approved] dihantar kepada ${bk.email}`, 'success');
-            renderAdminDashboard();
-        }
-
-        function openActionNoteModal(bookingId, targetStatus) {
-            const bk = bookings.find(b => b.id === bookingId);
-            if (!bk) return;
-
-            document.getElementById('action-booking-id').value = bookingId;
-            document.getElementById('action-target-status').value = targetStatus;
-
-            if (targetStatus === 'Postponed') {
-                document.getElementById('action-note-title').innerText = 'Tangguhkan Tempahan Latihan (Postpone)';
-                document.getElementById('action-note-subtitle').innerText = 'Nyatakan tarikh baharu atau pencerahan sebab penangguhan kepada peserta.';
-                document.getElementById('action-note-text').value = 'Dimaklumkan bahawa sesi latihan ini DITANGGUHKAN ke tarikh baharu yang akan dimaklumkan kelak.';
-            } else if (targetStatus === 'Cancelled') {
-                document.getElementById('action-note-title').innerText = 'Batalkan Tempahan Latihan (Cancel)';
-                document.getElementById('action-note-subtitle').innerText = 'Nyatakan sebab pembatalan slot kepada peserta.';
-                document.getElementById('action-note-text').value = 'Dukacita dimaklumkan tempahan anda DIBATALKAN kerana kuota permohonan penuh / masalah teknikal.';
+        function openMyBookingsModal() {
+            if (!currentUser) {
+                showToast('Sila log masuk untuk menyemak tempahan anda.', 'warning');
+                openUserAuthModal('login');
+                return;
             }
 
-            document.getElementById('action-note-modal').classList.add('active');
+            const myBookings = bookings.filter(b => b.userEmail.toLowerCase() === currentUser.email.toLowerCase());
+            const tbody = document.getElementById('my-booking-rows');
+            tbody.innerHTML = '';
+
+            if (myBookings.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Tiada rekod tempahan ditemui untuk emel ${currentUser.email}.</td></tr>`;
+            } else {
+                myBookings.forEach(bk => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${bk.trainingTitle}</strong></td>
+                        <td>${bk.dateBooked}</td>
+                        <td><span class="status-badge status-${bk.status}">${bk.status}</span></td>
+                        <td><small>${bk.adminNote || '-'}</small></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            openModal('my-bookings-modal');
+        }
+
+        /* --- ADMIN ACTIONS & NOTIFICATION UPDATES --- */
+
+        function updateBookingStatus(bookingId, status, note = '') {
+            const bk = bookings.find(b => b.id === bookingId);
+            if (!bk) return;
+
+            bk.status = status;
+            if (note) bk.adminNote = note;
+            else if (status === 'Approved') bk.adminNote = 'Tempahan disahkan oleh Admin.';
+
+            addNotification(
+                `Kemaskini Status Tempahan (${status})`,
+                `Status tempahan anda untuk ${bk.trainingTitle} telah dikemaskini kepada "${status}". ${note ? 'Nota: ' + note : ''}`
+            );
+
+            saveData();
+            renderAdminBookings();
+            showToast(`Status tempahan ${bk.id} dikemaskini ke ${status}`, 'success');
+        }
+
+        function openActionNoteModal(bookingId, status) {
+            document.getElementById('action-booking-id').value = bookingId;
+            document.getElementById('action-target-status').value = status;
+            document.getElementById('action-note-title').innerText = status === 'Postponed' ? 'Sebab Penangguhan' : 'Sebab Pembatalan';
+            document.getElementById('action-note-text').value = '';
+
+            openModal('action-note-modal');
         }
 
         function submitAdminActionWithNote(e) {
             e.preventDefault();
             const bookingId = document.getElementById('action-booking-id').value;
-            const targetStatus = document.getElementById('action-target-status').value;
-            const noteText = document.getElementById('action-note-text').value.trim();
+            const status = document.getElementById('action-target-status').value;
+            const note = document.getElementById('action-note-text').value;
 
-            const bk = bookings.find(b => b.id === bookingId);
-            if (!bk) return;
-
-            bk.status = targetStatus;
-
-            // Reduce booked slot if cancelled
-            if (targetStatus === 'Cancelled') {
-                const tr = trainings.find(t => t.id === bk.trainingId);
-                if (tr && tr.booked > 0) tr.booked -= 1;
-            }
-
-            saveData('ub_bookings', bookings);
-            saveData('ub_trainings', trainings);
-
-            const titleText = targetStatus === 'Postponed' ? 'Notifikasi Penangguhan Sesi ⏱' : 'Notifikasi Pembatalan Tempahan ⚠️';
-
-            // Trigger Notification to User
-            createNotification(
-                bk.id,
-                bk.email,
-                titleText,
-                `Hai ${bk.name}, status tempahan anda dikemaskini kepada [${targetStatus}]. Nota Admin: "${noteText}"`,
-                targetStatus
-            );
-
+            updateBookingStatus(bookingId, status, note);
             closeModal('action-note-modal');
-            showToast('Kemaskini & Notifikasi Berjaya', `Notifikasi status [${targetStatus}] telah dihantar ke emel peserta.`, 'warning');
-            renderAdminDashboard();
         }
 
-        // --- TRAINING CRUD LOGIC ---
-        function renderAdminTrainings() {
-            const tbody = document.getElementById('admin-training-rows');
-            tbody.innerHTML = '';
-
-            trainings.forEach(tr => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${tr.title}</strong></td>
-                        <td>${tr.category}</td>
-                        <td>${tr.date}<br><small style="color:var(--text-muted);">${tr.time}</small></td>
-                        <td>${tr.booked} / ${tr.slots} Slot</td>
-                        <td>
-                            <div style="display:flex; gap:0.4rem;">
-                                <button class="btn btn-secondary btn-sm" onclick="editTraining('${tr.id}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteTraining('${tr.id}')">Padam</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
+        /* --- TRAINING MODULE CRUD (ADMIN) --- */
 
         function openAddTrainingModal() {
-            document.getElementById('training-form').reset();
-            document.getElementById('training-id').value = '';
             document.getElementById('training-modal-title').innerText = 'Tambah Latihan Baharu';
-            document.getElementById('training-modal').classList.add('active');
+            document.getElementById('training-id').value = '';
+            document.getElementById('training-form').reset();
+            openModal('training-modal');
         }
 
-        function editTraining(id) {
+        function openEditTrainingModal(id) {
             const tr = trainings.find(t => t.id === id);
             if (!tr) return;
 
+            document.getElementById('training-modal-title').innerText = 'Kemaskini Modul Latihan';
             document.getElementById('training-id').value = tr.id;
             document.getElementById('tr-title').value = tr.title;
             document.getElementById('tr-category').value = tr.category;
             document.getElementById('tr-date').value = tr.date;
             document.getElementById('tr-time').value = tr.time;
-            document.getElementById('tr-slots').value = tr.slots;
+            document.getElementById('tr-slots').value = tr.totalSlots;
             document.getElementById('tr-desc').value = tr.description;
 
-            document.getElementById('training-modal-title').innerText = 'Kemaskini Latihan';
-            document.getElementById('training-modal').classList.add('active');
+            openModal('training-modal');
         }
 
         function saveTraining(e) {
@@ -1330,195 +1456,129 @@
             const date = document.getElementById('tr-date').value;
             const time = document.getElementById('tr-time').value;
             const slots = parseInt(document.getElementById('tr-slots').value);
-            const description = document.getElementById('tr-desc').value;
+            const desc = document.getElementById('tr-desc').value;
 
             if (id) {
+                // Edit existing
                 const tr = trainings.find(t => t.id === id);
                 if (tr) {
                     tr.title = title;
                     tr.category = category;
                     tr.date = date;
                     tr.time = time;
-                    tr.slots = slots;
-                    tr.description = description;
+                    tr.totalSlots = slots;
+                    tr.description = desc;
+                    showToast('Latihan berjaya dikemaskini!', 'success');
                 }
-                showToast('Latihan Dikemaskini', 'Maklumat modul latihan berjaya dikemaskini.', 'success');
             } else {
-                trainings.push({
-                    id: 'tr-' + Date.now(),
-                    title,
-                    category,
-                    date,
-                    time,
-                    slots,
-                    booked: 0,
-                    description
-                });
-                showToast('Latihan Ditambah', 'Modul latihan baharu diterbitkan!', 'success');
+                // Add new
+                const newTraining = {
+                    id: 'TRN-' + Math.floor(100 + Math.random() * 900),
+                    title: title,
+                    category: category,
+                    date: date,
+                    time: time,
+                    totalSlots: slots,
+                    bookedSlots: 0,
+                    description: desc
+                };
+                trainings.push(newTraining);
+                showToast('Latihan baharu berjaya ditambah!', 'success');
             }
 
-            saveData('ub_trainings', trainings);
-            closeModal('training-modal');
-            renderAdminDashboard();
+            saveData();
             renderUserTrainings();
+            renderAdminTrainings();
+            closeModal('training-modal');
         }
 
         function deleteTraining(id) {
-            if (confirm('Adakah anda pasti mahu memadam modul latihan ini?')) {
+            if (confirm('Adakah anda pasti mahu menghapuskan latihan ini?')) {
                 trainings = trainings.filter(t => t.id !== id);
-                saveData('ub_trainings', trainings);
-                showToast('Latihan Dipadam', 'Modul latihan telah dikeluarkan dari sistem.', 'danger');
-                renderAdminDashboard();
+                saveData();
                 renderUserTrainings();
+                renderAdminTrainings();
+                showToast('Latihan telah dipadam.', 'warning');
             }
         }
 
-        // --- NOTIFICATION ENGINE ---
-        function createNotification(bookingId, userEmail, title, message, type) {
-            const now = new Date();
-            const timeStr = now.toISOString().split('T')[0] + ' ' + now.toTimeString().substring(0, 5);
+        /* --- NOTIFICATION SYSTEM --- */
 
+        function addNotification(title, body) {
             const newNotif = {
-                id: 'nt-' + Date.now(),
-                bookingId,
-                userEmail,
-                title,
-                message,
-                type,
-                timestamp: timeStr,
-                read: false
+                id: 'NT-' + Date.now(),
+                title: title,
+                body: body,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                unread: true
             };
-
             notifications.unshift(newNotif);
-            saveData('ub_notifications', notifications);
-            updateNotifBadge();
+            saveData();
+            updateNotificationUI();
         }
 
-        function updateNotifBadge() {
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const badge = document.getElementById('notif-count');
-            badge.innerText = unreadCount;
-            badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        function updateNotificationUI() {
+            const unreadCount = notifications.filter(n => n.unread).length;
+            document.getElementById('notif-count').innerText = unreadCount;
+
+            const listContainer = document.getElementById('notif-list-container');
+            listContainer.innerHTML = '';
+
+            if (notifications.length === 0) {
+                listContainer.innerHTML = `<p style="padding:1rem; text-align:center; color:var(--text-muted);">Tiada notifikasi.</p>`;
+                return;
+            }
+
+            notifications.forEach(n => {
+                const item = document.createElement('div');
+                item.className = `notif-item ${n.unread ? 'unread' : ''}`;
+                item.innerHTML = `
+                    <div class="notif-header">
+                        <span class="notif-title">${n.title}</span>
+                        <span class="notif-time">${n.time}</span>
+                    </div>
+                    <div class="notif-body">${n.body}</div>
+                `;
+                listContainer.appendChild(item);
+            });
         }
 
         function openNotifModal() {
-            const container = document.getElementById('notif-list-container');
-            container.innerHTML = '';
-
-            if (notifications.length === 0) {
-                container.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Tiada notifikasi ditemui.</div>`;
-            } else {
-                notifications.forEach(n => {
-                    container.innerHTML += `
-                        <div class="notif-item ${n.read ? '' : 'unread'}">
-                            <div class="notif-header">
-                                <span class="notif-title">${n.title}</span>
-                                <span class="notif-time">${n.timestamp}</span>
-                            </div>
-                            <div class="notif-body">${n.message}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Ke: ${n.userEmail}</div>
-                        </div>
-                    `;
-                    n.read = true;
-                });
-                saveData('ub_notifications', notifications);
-                updateNotifBadge();
-            }
-
-            document.getElementById('notif-modal').classList.add('active');
+            // Mark all as read when opening
+            notifications.forEach(n => n.unread = false);
+            saveData();
+            updateNotificationUI();
+            openModal('notif-modal');
         }
 
         function clearAllNotifications() {
             notifications = [];
-            saveData('ub_notifications', notifications);
-            updateNotifBadge();
-            openNotifModal();
-            showToast('Notifikasi Dipadam', 'Semua notifikasi telah dipadam.', 'warning');
+            saveData();
+            updateNotificationUI();
+            showToast('Semua notifikasi telah dipadam.', 'warning');
         }
 
-        // --- SEARCH MY BOOKINGS (FOR USERS) ---
-        function openMyBookingsModal() {
-            document.getElementById('my-bookings-result').innerHTML = '';
-            document.getElementById('search-user-email').value = '';
-            document.getElementById('my-bookings-modal').classList.add('active');
+        /* --- MODAL & TOAST HELPERS --- */
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
         }
 
-        function searchUserBookings() {
-            const email = document.getElementById('search-user-email').value.toLowerCase().trim();
-            const resDiv = document.getElementById('my-bookings-result');
-
-            if (!email) {
-                resDiv.innerHTML = `<p style="color: red; font-size: 0.85rem;">Sila masukkan emel anda.</p>`;
-                return;
-            }
-
-            const myBks = bookings.filter(b => b.email.toLowerCase() === email);
-
-            if (myBks.length === 0) {
-                resDiv.innerHTML = `<div style="text-align: center; padding: 1.5rem; background: var(--bg); border-radius: 10px; color: var(--text-muted);">Tiada rekod tempahan ditemui untuk emel ini.</div>`;
-                return;
-            }
-
-            let html = `<div style="display: flex; flex-direction: column; gap: 1rem;">`;
-            myBks.forEach(bk => {
-                const tr = trainings.find(t => t.id === bk.trainingId) || { title: 'Modul Latihan' };
-                const userNotifs = notifications.filter(n => n.bookingId === bk.id);
-
-                html += `
-                    <div style="background: var(--bg); border: 1px solid var(--border); padding: 1.25rem; border-radius: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div>
-                                <h4 style="color: var(--secondary); font-size: 1.05rem;">${tr.title}</h4>
-                                <p style="font-size: 0.85rem; color: var(--text-muted);">Tarikh Tempah: ${bk.dateBooked} | Syarikat: ${bk.company}</p>
-                            </div>
-                            <span class="status-badge status-${bk.status}">${bk.status}</span>
-                        </div>
-                        ${userNotifs.length > 0 ? `
-                            <div style="margin-top: 0.8rem; background: white; padding: 0.75rem; border-radius: 8px; border-left: 3px solid var(--primary); font-size: 0.825rem;">
-                                <strong>Mesej Notifikasi Terkini:</strong><br>
-                                "${userNotifs[0].message}"
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-            html += `</div>`;
-            resDiv.innerHTML = html;
-        }
-
-        // --- TOAST NOTIFICATIONS UI ---
-        function showToast(title, message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            let icon = '🔔';
-            if (type === 'success') icon = '✅';
-            if (type === 'warning') icon = '⏱';
-            if (type === 'danger') icon = '⚠️';
-
-            toast.innerHTML = `
-                <div style="font-size: 1.3rem;">${icon}</div>
-                <div>
-                    <div style="font-weight: 700; font-size: 0.9rem;">${title}</div>
-                    <div style="font-size: 0.8rem; opacity: 0.9; margin-top: 0.1rem;">${message}</div>
-                </div>
-            `;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.remove();
-            }, 5000);
-        }
-
-        // --- GENERAL UTILS ---
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // Initialize user view
-        renderUserTrainings();
-        updateNotifBadge();
+        function showToast(message, type = 'primary') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>💬</span><div>${message}</div>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
     </script>
 </body>
 </html>
